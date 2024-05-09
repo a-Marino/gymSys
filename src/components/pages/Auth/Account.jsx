@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../../../context/AuthContext';
+import { Button } from '../../common/Button';
 
 export const Account = function () {
   const { user, logout } = UserAuth();
@@ -15,10 +16,15 @@ export const Account = function () {
   };
 
   return (
-    <div>
-      Account
-      <h1>email: {user.email}</h1>
-      <button onClick={handleLogout}>Logout</button>
+    <div className="px-5 mt-20">
+      <h1 className="text-3xl font-semibold">Account</h1>
+      <div className="my-5 py-5 px-5 border rounded-md w-[50%] border-black flex flex-col gap-2">
+        <p>
+          Email: <span className="font-semibold">{user.email}</span>
+        </p>
+        <p>Name: {user.displayName}</p>
+      </div>
+      <Button onClick={handleLogout}>Logout</Button>
     </div>
   );
 };

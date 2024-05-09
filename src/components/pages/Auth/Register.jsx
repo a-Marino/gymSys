@@ -1,49 +1,70 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { UserAuth } from '../../../context/AuthContext';
+import { Button } from '../../common/Button';
 
 export const Register = function () {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const { createUser } = UserAuth();
+  const { createUser, updateUser } = UserAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
       await createUser(email, password);
+      await updateUser(name);
       navigate('/account');
     } catch (err) {
-      setError(err.message);
-      console.log(error);
+      setError(err.code.split('auth/')[1]);
     }
   };
 
   return (
-    <div>
+    <div className="px-5 text-center mt-20">
       <div>
-        <h1>Sign up</h1>
-        <p>
-          Already have an account?{' '}
-          <Link to="/login" className="underline">
-            Sign in.
-          </Link>
-        </p>
+        <h1 className="text-3xl font-bold">Sign up</h1>
       </div>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email</label>
-          <input type="email" className="border" onChange={(e) => setEmail(e.target.value)} />
+          <input
+            type="text"
+            className="border border-black w-[50%] mt-5 rounded-full px-4 py-2"
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Full Name"
+          />
         </div>
         <div>
-          <label>Password</label>
-          <input type="password" className="border" onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="email"
+            className="border border-black w-[50%] my-5 rounded-full px-4 py-2"
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+          />
         </div>
-        <button>Sign Up</button>
+        <div>
+          <input
+            type="password"
+            className="border border-black w-[50%]  rounded-full px-4 py-2"
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
+        </div>
+        {error && (
+          <p className="mt-3 bg-red-300 w-[50%] mx-auto rounded-full py-1 text-red-700">{error}</p>
+        )}
+        <Button className="w-[50%] mt-3 mb-2">Sign Up</Button>
       </form>
+      <p>
+        Already have an account?
+        <Link to="/login" className="ml-1 font-semibold hover:underline">
+          Sign in.
+        </Link>
+      </p>
     </div>
   );
 };

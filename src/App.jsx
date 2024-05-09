@@ -5,23 +5,26 @@ import { Register } from './components/pages/Auth/Register';
 import { AuthContextProvider } from './context/AuthContext';
 import { Account } from './components/pages/Auth/Account';
 import { ProtectedRoute } from './components/pages/Auth/ProtectedRoute';
+import { Layout } from './components/layout/Layout';
 
 function App() {
   return (
     <div>
       <AuthContextProvider>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/account"
-            element={
-              <ProtectedRoute>
-                <Account />
-              </ProtectedRoute>
-            }
-          />
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <Account />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
         </Routes>
       </AuthContextProvider>
     </div>

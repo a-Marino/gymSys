@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { UserAuth } from '../../../context/AuthContext';
 import { useState } from 'react';
+import { Button } from '../../common/Button';
 
 export const Login = function () {
   const { login } = UserAuth();
@@ -16,33 +17,43 @@ export const Login = function () {
       await login(email, password);
       navigate('/account');
     } catch (err) {
-      setError(err.message);
-      console.log(error);
+      setError(err.code.split('auth/')[1]);
     }
   };
 
   return (
-    <div>
+    <div className="px-5 text-center mt-20">
       <div>
-        <h1>Sign In</h1>
-        <p>
-          Dont have an account yet?{' '}
-          <Link to="/register" className="underline">
-            Sign up.
-          </Link>
-        </p>
+        <h1 className="text-3xl font-bold">Sign In</h1>
       </div>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email</label>
-          <input type="email" className="border" onChange={(e) => setEmail(e.target.value)} />
+          <input
+            type="email"
+            className="border border-black w-[50%] my-5 rounded-full px-4 py-2"
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+          />
         </div>
         <div>
-          <label>Password</label>
-          <input type="password" className="border" onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="password"
+            className="border border-black w-[50%]  rounded-full px-4 py-2"
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
         </div>
-        <button>Sign In</button>
+        {error && (
+          <p className="mt-3 bg-red-300 w-[50%] mx-auto rounded-full py-1 text-red-700">{error}</p>
+        )}
+        <Button className="w-[50%] mt-5 mb-2">Sign In</Button>
       </form>
+      <p>
+        Dont have an account yet?
+        <Link to="/register" className="ml-1 font-semibold hover:underline">
+          Sign Up.
+        </Link>
+      </p>
     </div>
   );
 };
