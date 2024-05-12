@@ -1,30 +1,50 @@
 import { UserAuth } from '../../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { Button } from '../../common/Button';
+import { motion } from 'framer-motion';
 
 export const Nav = () => {
   const { user } = UserAuth();
 
   return (
-    <header className="flex flex-row items-center justify-between px-5 py-2 sticky top-0 ">
-      <Link to="/" className="text-2xl font-bold ">
-        GYM LOGO
-      </Link>
-      <ul className="md:flex hidden flex-row gap-5 -ml-20">
-        <li>Plans</li>
-        <li>About us</li>
-        <li>Equimpent</li>
-        <li>Contact us</li>
-      </ul>
-      {user ? (
-        <Link to="/account">
-          <Button>Profile</Button>
+    <header className="sticky top-3">
+      <nav className="flex flex-row px-5 py-2 bg-black/80 text-white rounded-full m-3 justify-between items-center backdrop-blur-md">
+        <Link to="/" className="text-2xl font-bold">
+          GYM LOGO
         </Link>
-      ) : (
-        <Link to="/login">
-          <Button>Login</Button>
-        </Link>
-      )}
+        <div className="hidden md:flex items-center space-x-5">
+          <ul className="flex flex-row gap-5">
+            <motion.li className="cursor-pointer " whileHover={{ scale: 1.05 }}>
+              Plans
+            </motion.li>
+            <motion.li className="cursor-pointer " whileHover={{ scale: 1.05 }}>
+              About us
+            </motion.li>
+            <motion.li className="cursor-pointer " whileHover={{ scale: 1.05 }}>
+              Equimpent
+            </motion.li>
+            <motion.li className="cursor-pointer " whileHover={{ scale: 1.05 }}>
+              Contact us
+            </motion.li>
+            {user && (
+              <motion.li className="cursor-pointer " whileHover={{ scale: 1.05 }}>
+                Classes
+              </motion.li>
+            )}
+          </ul>
+          <div className="">
+            {user ? (
+              <Link to="/account">
+                <Button>Profile</Button>
+              </Link>
+            ) : (
+              <Link to="/login">
+                <Button>Login</Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      </nav>
     </header>
   );
 };
