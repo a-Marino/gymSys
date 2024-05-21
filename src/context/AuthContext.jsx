@@ -1,26 +1,32 @@
 import { createContext, useContext } from 'react';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  updateProfile,
-} from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from '../firebaseConfig';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const UserContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
-  const createUser = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
-
-  const updateUser = (name) => {
-    updateProfile(auth.currentUser, { displayName: name });
-  };
+  function createUser(email, password, name, rol) {
+    axios
+      .post('http://localhost:5000/api/user', {
+        email: email,
+        password: password,
+        name: name,
+        rol: rol,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // const docRef = doc(db, `users/${infoUser.user.uid}`);
+    // setDoc(docRef, { email: email, name: name, rol: rol });
+  }
 
   const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
@@ -30,9 +36,25 @@ export const AuthContextProvider = ({ children }) => {
     return signOut(auth);
   };
 
+  async function getUserData(uid) {
+    const docRef = doc(db, `users/${uid}`);
+    const docCifrada = await getDoc(docRef);
+    const data = docCifrada.data();
+    return data;
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      if (currentUser) {
+        getUserData(currentUser.uid).then((data) => {
+          const userData = {
+            ...data,
+          };
+          setUser(userData);
+        });
+      } else {
+        setUser(null);
+      }
     });
     return () => {
       unsubscribe();
@@ -40,7 +62,7 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ createUser, user, logout, login, updateUser }}>
+    <UserContext.Provider value={{ createUser, user, logout, login }}>
       {children}
     </UserContext.Provider>
   );

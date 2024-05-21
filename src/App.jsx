@@ -4,7 +4,11 @@ import { Login } from './components/pages/Auth/Login';
 import { Register } from './components/pages/Auth/Register';
 import { AuthContextProvider } from './context/AuthContext';
 import { Account } from './components/pages/Auth/Account';
-import { ProtectedRoute } from './components/pages/Auth/ProtectedRoute';
+import {
+  ProtectedRouteAdmin,
+  ProtectedRouteUserLoged,
+  ProtectedRouteUserUnloged,
+} from './components/pages/Auth/ProtectedRoutes';
 import { Layout } from './components/layout/Layout';
 
 function App() {
@@ -14,14 +18,28 @@ function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route
+              path="/login"
+              element={
+                <ProtectedRouteUserLoged>
+                  <Login />
+                </ProtectedRouteUserLoged>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <ProtectedRouteAdmin>
+                  <Register />
+                </ProtectedRouteAdmin>
+              }
+            />
             <Route
               path="/account"
               element={
-                <ProtectedRoute>
+                <ProtectedRouteUserUnloged>
                   <Account />
-                </ProtectedRoute>
+                </ProtectedRouteUserUnloged>
               }
             />
           </Route>

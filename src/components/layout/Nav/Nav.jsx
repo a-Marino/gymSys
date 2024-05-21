@@ -31,15 +31,20 @@ export const Nav = () => {
                 Classes
               </motion.li>
             )}
+            {user && user.rol === 'admin' && (
+              <Link className="cursor-pointer " to="/register">
+                Add User
+              </Link>
+            )}
           </ul>
           <div className="">
-            {user ? (
-              <Link to="/account">
-                <Button>Profile</Button>
-              </Link>
-            ) : (
+            {!user ? (
               <Link to="/login">
                 <Button>Login</Button>
+              </Link>
+            ) : (
+              <Link to="/account">
+                <Button>Profile</Button>
               </Link>
             )}
           </div>

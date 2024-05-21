@@ -1,0 +1,13 @@
+
+- Diagramar base de datos // user  - perfiles - sedes - clases - planes 
+
+- Mostrar cosas segun perfil logueado 
+
+-  Validar mail  y recueprar contraseña 
+
+- horarios 
+
+- mapa 
+
+- 
+

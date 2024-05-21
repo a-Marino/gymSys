@@ -22,7 +22,8 @@ export const Account = function () {
         <p>
           Email: <span className="font-semibold">{user.email}</span>
         </p>
-        <p>Name: {user.displayName}</p>
+        <p>Name: {user.name}</p>
+        <p>Rol: {user.rol}</p>
       </div>
       <Button onClick={handleLogout}>Logout</Button>
     </div>

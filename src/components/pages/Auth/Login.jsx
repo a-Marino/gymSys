@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../../../context/AuthContext';
 import { useState } from 'react';
 import { Button } from '../../common/Button';
@@ -48,12 +48,6 @@ export const Login = function () {
         )}
         <Button className="w-[50%] mt-5 mb-2">Sign In</Button>
       </form>
-      <p>
-        Dont have an account yet?
-        <Link to="/register" className="ml-1 font-semibold hover:underline">
-          Sign Up.
-        </Link>
-      </p>
     </div>
   );
 };
