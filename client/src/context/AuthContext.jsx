@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -9,8 +9,9 @@ const UserContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [error, setError] = useState();
 
-  function createUser(email, password, name, rol) {
+  async function createUser(email, password, name, rol) {
     axios
       .post('http://localhost:5000/api/user', {
         email: email,
@@ -19,13 +20,14 @@ export const AuthContextProvider = ({ children }) => {
         rol: rol,
       })
       .then((res) => {
-        console.log(res);
+        setError(res.data);
+        setTimeout(() => {
+          setError(undefined);
+        }, 5000);
       })
       .catch((err) => {
         console.log(err);
       });
-    // const docRef = doc(db, `users/${infoUser.user.uid}`);
-    // setDoc(docRef, { email: email, name: name, rol: rol });
   }
 
   const login = (email, password) => {
@@ -62,7 +64,7 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ createUser, user, logout, login }}>
+    <UserContext.Provider value={{ createUser, user, logout, login, error }}>
       {children}
     </UserContext.Provider>
   );
