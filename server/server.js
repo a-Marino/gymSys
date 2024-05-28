@@ -51,4 +51,3 @@ app.listen(5000, () => {
   console.log('Server started at PORT 5000');
 });
 
-// TODO ADD FIREBASE ADMIN SDK  CREATE USER INTO POST API/USER

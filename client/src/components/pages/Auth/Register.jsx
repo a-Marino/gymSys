@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { UserAuth } from '../../../context/AuthContext';
 import { Button } from '../../common/Button';
+import { Navigate } from 'react-router-dom';
 
 export const Register = function () {
   const [email, setEmail] = useState('');
@@ -9,7 +10,7 @@ export const Register = function () {
   const [password, setPassword] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const { createUser, error } = UserAuth();
+  const { createUser, error, userData } = UserAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +27,7 @@ export const Register = function () {
     }
   };
 
-  return (
+  return userData.rol === 'admin' ? (
     <div className="px-5 text-center mt-20">
       <div>
         <h1 className="text-3xl font-bold">Sign up</h1>
@@ -83,5 +84,7 @@ export const Register = function () {
         <Button className="w-[50%] mt-3 mb-2">Sign Up</Button>
       </form>
     </div>
+  ) : (
+    <Navigate to="/" />
   );
 };

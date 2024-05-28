@@ -9,6 +9,7 @@ const UserContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState();
 
   async function createUser(email, password, name, rol) {
@@ -52,9 +53,12 @@ export const AuthContextProvider = ({ children }) => {
           const userData = {
             ...data,
           };
+          setIsLoading(false);
+          localStorage.setItem('userData', JSON.stringify(userData));
           setUser(userData);
         });
       } else {
+        localStorage.clear();
         setUser(null);
       }
     });
@@ -63,8 +67,11 @@ export const AuthContextProvider = ({ children }) => {
     };
   }, []);
 
+  const userDataStorage = localStorage.getItem('userData');
+  const userData = JSON.parse(userDataStorage);
+
   return (
-    <UserContext.Provider value={{ createUser, user, logout, login, error }}>
+    <UserContext.Provider value={{ createUser, user, logout, login, error, isLoading, userData }}>
       {children}
     </UserContext.Provider>
   );

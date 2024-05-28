@@ -1,55 +1,134 @@
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarContent,
+  NavbarItem,
+  Link,
+  Button,
+  User,
+} from '@nextui-org/react';
 import { UserAuth } from '../../../context/AuthContext';
-import { Link } from 'react-router-dom';
-import { Button } from '../../common/Button';
-import { motion } from 'framer-motion';
 
 export const Nav = () => {
-  const { user } = UserAuth();
+  const { logout, userData } = UserAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <header className="sticky top-3">
-      <nav className="flex flex-row px-5 py-2 bg-black/80 text-white rounded-full m-3 justify-between items-center backdrop-blur-md">
-        <Link to="/" className="text-2xl font-bold">
-          GYM LOGO
-        </Link>
-        <div className="hidden md:flex items-center space-x-5">
-          <ul className="flex flex-row gap-5">
-            <motion.li className="cursor-pointer " whileHover={{ scale: 1.05 }}>
-              Plans
-            </motion.li>
-            <motion.li className="cursor-pointer " whileHover={{ scale: 1.05 }}>
-              About us
-            </motion.li>
-            <motion.li className="cursor-pointer " whileHover={{ scale: 1.05 }}>
-              Equimpent
-            </motion.li>
-            <motion.li className="cursor-pointer " whileHover={{ scale: 1.05 }}>
-              Contact us
-            </motion.li>
-            {user && (
-              <motion.li className="cursor-pointer " whileHover={{ scale: 1.05 }}>
-                Classes
-              </motion.li>
-            )}
-            {user && user.rol === 'admin' && (
-              <Link className="cursor-pointer " to="/register">
-                Add User
-              </Link>
-            )}
-          </ul>
-          <div className="">
-            {!user ? (
-              <Link to="/login">
-                <Button>Login</Button>
-              </Link>
-            ) : (
-              <Link to="/account">
-                <Button>Profile</Button>
-              </Link>
-            )}
-          </div>
-        </div>
-      </nav>
-    </header>
+    <Navbar isBordered className="bg-black text-white" maxWidth="xl">
+      <NavbarContent className="sm:hidden" justify="start">
+        <NavbarMenuToggle />
+      </NavbarContent>
+
+      <NavbarContent className="sm:hidden pr-3" justify="center">
+        <NavbarBrand>
+          <Link className="font-bold text-inherit" href="/">
+            GYM
+          </Link>
+        </NavbarBrand>
+      </NavbarContent>
+
+      <NavbarContent className="hidden sm:flex gap-4 text-white" justify="center">
+        <NavbarBrand>
+          <Link href="/" className="font-bold text-inherit">
+            GYM
+          </Link>
+        </NavbarBrand>
+        <NavbarItem>
+          <Link href="#" className="text-white">
+            Plans
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link className="text-white" href="#">
+            Equipment
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link className="text-white" href="#">
+            About Us
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link className="text-white" href="#">
+            Contact Us
+          </Link>
+        </NavbarItem>
+        {userData && userData.rol === 'admin' && (
+          <NavbarItem>
+            <Link className="text-blue-600" href="/register">
+              Add User
+            </Link>
+          </NavbarItem>
+        )}
+      </NavbarContent>
+
+      <NavbarContent justify="end">
+        <NavbarItem>
+          {!userData ? (
+            <Button as={Link} color="primary" href="/login" variant="ghost">
+              Login
+            </Button>
+          ) : (
+            <div>
+              <User
+                as={Link}
+                name={userData.name}
+                description={userData.rol}
+                href="/account"
+                className="hidden md:flex"
+              />
+              <User
+                as={Link}
+                href="/account"
+                className="md:hidden"
+                avatarProps={{ name: userData.name }}
+              />
+            </div>
+          )}
+        </NavbarItem>
+      </NavbarContent>
+
+      <NavbarMenu className="bg-black text-white">
+        <NavbarMenuItem className="space-y-3">
+          <Link className="w-full text-white" href="#" size="lg">
+            Plans
+          </Link>
+          <Link className="w-full text-white" href="#" size="lg">
+            Equipment
+          </Link>
+          <Link className="w-full text-white" href="#" size="lg">
+            About Us
+          </Link>
+          <Link className="w-full text-white" href="#" size="lg">
+            Contact Us
+          </Link>
+          {userData && (
+            <Link className="w-full text-white" href="#" size="lg">
+              Classes
+            </Link>
+          )}
+          {userData && userData.rol === 'admin' && (
+            <Link className="w-full text-blue-600" href="/register" size="lg">
+              Add User
+            </Link>
+          )}
+          {userData && (
+            <Link className="w-full text-red-600" href="/" size="lg" onClick={handleLogout}>
+              Logout
+            </Link>
+          )}
+        </NavbarMenuItem>
+      </NavbarMenu>
+    </Navbar>
   );
 };

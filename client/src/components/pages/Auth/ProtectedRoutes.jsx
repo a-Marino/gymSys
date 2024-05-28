@@ -20,13 +20,3 @@ export const ProtectedRouteUserLoged = ({ children }) => {
 
   return children;
 };
-
-export const ProtectedRouteAdmin = ({ children }) => {
-  const { user } = UserAuth();
-
-  if (user && user.rol != 'admin') {
-    return <Navigate to="/" />;
-  }
-
-  return children;
-};

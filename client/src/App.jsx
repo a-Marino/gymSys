@@ -5,7 +5,6 @@ import { Register } from './components/pages/Auth/Register';
 import { AuthContextProvider } from './context/AuthContext';
 import { Account } from './components/pages/Auth/Account';
 import {
-  ProtectedRouteAdmin,
   ProtectedRouteUserLoged,
   ProtectedRouteUserUnloged,
 } from './components/pages/Auth/ProtectedRoutes';
@@ -29,9 +28,9 @@ function App() {
             <Route
               path="/register"
               element={
-                <ProtectedRouteAdmin>
+                <ProtectedRouteUserUnloged>
                   <Register />
-                </ProtectedRouteAdmin>
+                </ProtectedRouteUserUnloged>
               }
             />
             <Route
