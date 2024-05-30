@@ -40,6 +40,8 @@ app.post('/api/user', jsonParser, async (req, res) => {
         email: user.email,
         name: user.name,
         rol: user.rol,
+        planID: null,
+        avatarColors: user.avatarColors,
       });
     })
     .catch((err) => {
@@ -50,4 +52,3 @@ app.post('/api/user', jsonParser, async (req, res) => {
 app.listen(5000, () => {
   console.log('Server started at PORT 5000');
 });
-

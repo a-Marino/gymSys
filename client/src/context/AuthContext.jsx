@@ -4,6 +4,7 @@ import { auth, db } from '../firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import randomColor from 'randomcolor';
 
 const UserContext = createContext();
 
@@ -12,6 +13,9 @@ export const AuthContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState();
 
+  const color1 = randomColor();
+  const color2 = randomColor();
+
   async function createUser(email, password, name, rol) {
     axios
       .post('http://localhost:5000/api/user', {
@@ -19,6 +23,7 @@ export const AuthContextProvider = ({ children }) => {
         password: password,
         name: name,
         rol: rol,
+        avatarColors: [color1, color2],
       })
       .then((res) => {
         setError(res.data);

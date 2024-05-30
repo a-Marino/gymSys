@@ -9,6 +9,7 @@ import {
   ProtectedRouteUserUnloged,
 } from './components/pages/Auth/ProtectedRoutes';
 import { Layout } from './components/layout/Layout';
+import { Plans } from './components/pages/Plans/Plans';
 
 function App() {
   return (
@@ -17,28 +18,17 @@ function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/plans" element={<Plans />} />
+            <Route element={<ProtectedRouteUserUnloged />}>
+              <Route path="/register" element={<Register />} />
+              <Route path="/account" element={<Account />} />
+            </Route>
             <Route
               path="/login"
               element={
                 <ProtectedRouteUserLoged>
                   <Login />
                 </ProtectedRouteUserLoged>
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                <ProtectedRouteUserUnloged>
-                  <Register />
-                </ProtectedRouteUserUnloged>
-              }
-            />
-            <Route
-              path="/account"
-              element={
-                <ProtectedRouteUserUnloged>
-                  <Account />
-                </ProtectedRouteUserUnloged>
               }
             />
           </Route>

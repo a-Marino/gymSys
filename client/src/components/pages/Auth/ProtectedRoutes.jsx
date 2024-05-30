@@ -1,14 +1,14 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { UserAuth } from '../../../context/AuthContext';
 
-export const ProtectedRouteUserUnloged = ({ children }) => {
+export const ProtectedRouteUserUnloged = () => {
   const { user } = UserAuth();
 
   if (!user) {
     return <Navigate to="/login" />;
   }
 
-  return children;
+  return <Outlet />;
 };
 
 export const ProtectedRouteUserLoged = ({ children }) => {

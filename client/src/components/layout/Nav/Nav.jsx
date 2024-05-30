@@ -8,7 +8,11 @@ import {
   NavbarItem,
   Link,
   Button,
-  User,
+  Avatar,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from '@nextui-org/react';
 import { UserAuth } from '../../../context/AuthContext';
 
@@ -44,7 +48,7 @@ export const Nav = () => {
           </Link>
         </NavbarBrand>
         <NavbarItem>
-          <Link href="#" className="text-white">
+          <Link href="/plans" className="text-white">
             Plans
           </Link>
         </NavbarItem>
@@ -80,19 +84,27 @@ export const Nav = () => {
             </Button>
           ) : (
             <div>
-              <User
-                as={Link}
-                name={userData.name}
-                description={userData.rol}
-                href="/account"
-                className="hidden md:flex"
-              />
-              <User
-                as={Link}
-                href="/account"
-                className="md:hidden"
-                avatarProps={{ name: userData.name }}
-              />
+              <div className="hidden md:flex">
+                <Dropdown className="dark text-white">
+                  <DropdownTrigger>
+                    <Avatar
+                      name={userData.name}
+                      style={{
+                        background: `linear-gradient(to right, ${userData.avatarColors[0]}, ${userData.avatarColors[1]})`,
+                      }}
+                    />
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label="User options" variant="flat">
+                    <DropdownItem key="profile" href="/account">
+                      Profile
+                    </DropdownItem>
+                    <DropdownItem key="logout" color="danger" onClick={handleLogout}>
+                      Logout
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              </div>
+              <Avatar as={Link} href="/account" name={userData.name} className="md:hidden" />
             </div>
           )}
         </NavbarItem>
@@ -100,7 +112,7 @@ export const Nav = () => {
 
       <NavbarMenu className="bg-black text-white">
         <NavbarMenuItem className="space-y-3">
-          <Link className="w-full text-white" href="#" size="lg">
+          <Link className="w-full text-white" href="/plans" size="lg">
             Plans
           </Link>
           <Link className="w-full text-white" href="#" size="lg">

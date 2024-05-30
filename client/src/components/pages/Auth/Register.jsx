@@ -27,7 +27,7 @@ export const Register = function () {
     }
   };
 
-  return userData.rol === 'admin' ? (
+  return userData && userData.rol === 'admin' ? (
     <div className="px-5 text-center mt-20">
       <div>
         <h1 className="text-3xl font-bold">Sign up</h1>
