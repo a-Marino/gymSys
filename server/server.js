@@ -40,7 +40,7 @@ app.post('/api/user', jsonParser, async (req, res) => {
         email: user.email,
         name: user.name,
         rol: user.rol,
-        planID: null,
+        plan: null,
         avatarColors: user.avatarColors,
       });
     })

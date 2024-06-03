@@ -6,7 +6,7 @@ const usePlansStore = create((set) => ({
   plans: [],
   isLoading: true,
 
-  fetchPlans: async () => {
+  getPlans: async () => {
     try {
       const planesSnapshot = await getDocs(collection(db, 'plans'));
       const planesArray = planesSnapshot.docs.map((doc) => ({

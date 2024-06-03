@@ -89,9 +89,13 @@ export const Nav = () => {
                   <DropdownTrigger>
                     <Avatar
                       name={userData.name}
-                      style={{
-                        background: `linear-gradient(to right, ${userData.avatarColors[0]}, ${userData.avatarColors[1]})`,
-                      }}
+                      style={
+                        userData.avatarColor
+                          ? {
+                              background: `linear-gradient(to right, ${userData.avatarColors[0]}, ${userData.avatarColors[1]})`,
+                            }
+                          : { background: 'gold' }
+                      }
                     />
                   </DropdownTrigger>
                   <DropdownMenu aria-label="User options" variant="flat">
