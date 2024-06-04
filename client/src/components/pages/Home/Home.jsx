@@ -3,7 +3,7 @@ import { Button } from '../../common/Button';
 
 export const Home = function () {
   return (
-    <div className="flex flex-col px-5 mb-5">
+    <div className="flex flex-col px-5 pb-5">
       <p className="mt-5 opacity-70 z-[-1]">The best fitnes club in the town</p>
       <div className="flex flex-col md:flex-row">
         <h1 className="text-5xl font-semibold  leading-relaxed">

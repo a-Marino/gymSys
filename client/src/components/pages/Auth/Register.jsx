@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { UserAuth } from '../../../context/AuthContext';
-import { Button } from '../../common/Button';
 import { Navigate } from 'react-router-dom';
+import { Button, Input, Select, SelectItem } from '@nextui-org/react';
+import { EyeFilledIcon } from '../../../assets/Icons/EyeFilledIcon';
+import { EyeSlashFilledIcon } from '../../../assets/Icons/EyeSlashFilledIcon';
 
 export const Register = function () {
   const [email, setEmail] = useState('');
@@ -9,6 +11,7 @@ export const Register = function () {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [success, setSuccess] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const { createUser, error, userData } = UserAuth();
 
@@ -27,61 +30,78 @@ export const Register = function () {
     }
   };
 
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
+
   return userData && userData.rol === 'admin' ? (
-    <div className="px-5 text-center mt-20">
+    <div className="flex flex-col items-center justify-center text-white min-h-screen w-full dark gap-5">
       <div>
         <h1 className="text-3xl font-bold">Sign up</h1>
       </div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <input
-            type="text"
-            className="border border-black w-[50%] mt-5 rounded-full px-4 py-2"
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Full Name"
-            required
-          />
-        </div>
-        <div>
-          <input
-            type="email"
-            className="border border-black w-[50%] my-5 rounded-full px-4 py-2"
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            required
-          />
-        </div>
-        <div>
-          <input
-            type="password"
-            className="border border-black w-[50%]  rounded-full px-4 py-2"
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-          />
-        </div>
-        <div>
-          <select
-            id="rol"
-            name="rol"
-            className="border border-black w-[50%] rounded-full px-4 py-2 mt-5"
-            onChange={(e) => setRol(e.target.value)}
-            defaultValue="admin"
-            required
-          >
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
-          </select>
-        </div>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col items-center justify-center gap-5 w-[60%]"
+      >
+        <Input
+          type="text"
+          onChange={(e) => setName(e.target.value)}
+          label="Name"
+          labelPlacement="inside"
+          variant="bordered"
+          required
+        />
+        <Input
+          type="email"
+          onChange={(e) => setEmail(e.target.value)}
+          label="Email"
+          labelPlacement="inside"
+          variant="bordered"
+          required
+        />
+        <Input
+          label="Password"
+          onChange={(e) => setPassword(e.target.value)}
+          endContent={
+            <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+              {isVisible ? (
+                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+              ) : (
+                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+              )}
+            </button>
+          }
+          type={isVisible ? 'text' : 'password'}
+          variant="bordered"
+        />
+        <Select
+          id="rol"
+          name="rol"
+          onChange={(e) => setRol(e.target.value)}
+          label="Select a Role"
+          className="dark"
+          variant="bordered"
+          required
+        >
+          <SelectItem value="admin" key="admin">
+            Admin
+          </SelectItem>
+          <SelectItem value="user" key="user">
+            User
+          </SelectItem>
+        </Select>
+
         {error && (
-          <p className="mt-3 bg-red-300 w-[50%] mx-auto rounded-full py-1 text-red-700 ">{error}</p>
+          <p className="mt-3 bg-red-300  mx-auto rounded-full py-1 text-red-700 ">{error}</p>
         )}
         {success && (
-          <p className="mt-3 bg-green-300 w-[50%] mx-auto rounded-full py-1 text-green-700 ">
+          <p className="mt-3 bg-green-300  mx-auto rounded-full py-1 text-green-700 ">
             User created successfully
           </p>
         )}
-        <Button className="w-[50%] mt-3 mb-2">Sign Up</Button>
+        <Button className="mt-3 mb-2 w-full" color="primary">
+          Sign Up
+        </Button>
       </form>
     </div>
   ) : (

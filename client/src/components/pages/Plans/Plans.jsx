@@ -48,22 +48,23 @@ export const Plans = () => {
 
   return !isLoading ? (
     <div className="flex flex-col items-center justify-center mt-16 gap-10 px-6">
-      <h1 className="md:text-6xl text-5xl text-center font-semibold">
-        Choose a plan that fits <br /> your needs
+      <h1 className="md:text-6xl text-5xl text-center font-medium text-white">
+        Choose a <span className="italic text-primary font-semibold">plan</span> that fits <br />{' '}
+        your needs
       </h1>
       <div className="flex lg:flex-row flex-col gap-5 mt-10 flex-shrink">
         {plans.map((item, index) => (
-          <Card key={index} className="w-[350px] dark mb-10 p-2">
+          <Card key={index} className="w-[350px] dark mb-10 p-2 border-3 border-primary ">
             <CardHeader className="flex gap-3">
               <div className="flex flex-col gap-2">
                 <p className="text-3xl">{item.name}</p>
-                <p className="text-white/30 text-sm h-14">{item.description}</p>
+                <p className="text-white/40 text-sm h-14">{item.description}</p>
               </div>
             </CardHeader>
             <CardBody>
               <div className="flex flex-col">
                 <p className="text-3xl">${item.price}</p>
-                <ul className="text-xs mt-1 gap-2 text-white/70">
+                <ul className="text-xs mt-1 gap-2 text-white/40">
                   <li>Paid Monthly</li>
                   <li>Pause or cancel at any time.</li>
                 </ul>
@@ -79,7 +80,7 @@ export const Plans = () => {
               <Divider />
               <div className="mt-5 flex flex-col mb-2">
                 {item.benefits.map((item, index) => (
-                  <ul key={index} className="list-disc px-5">
+                  <ul key={index} className="list-disc px-5 marker:text-primary">
                     <li>{item}</li>
                   </ul>
                 ))}
@@ -91,7 +92,7 @@ export const Plans = () => {
       <ToastContainer />
     </div>
   ) : (
-    <div className="flex items-center justify-center h-[90vh]">
+    <div className="flex items-center justify-center h-screen -mt-16">
       <Spinner />
     </div>
   );

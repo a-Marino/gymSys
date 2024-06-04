@@ -7,7 +7,9 @@ import { NextUIProvider } from '@nextui-org/react';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <NextUIProvider>
     <BrowserRouter>
-      <App />
+      <main className="dark">
+        <App />
+      </main>
     </BrowserRouter>
   </NextUIProvider>
 );

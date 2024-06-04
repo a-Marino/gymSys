@@ -28,14 +28,14 @@ export const Nav = () => {
   };
 
   return (
-    <Navbar isBordered className="bg-black text-white" maxWidth="xl">
+    <Navbar isBordered className="dark text-white" maxWidth="full">
       <NavbarContent className="sm:hidden" justify="start">
         <NavbarMenuToggle />
       </NavbarContent>
 
       <NavbarContent className="sm:hidden pr-3" justify="center">
         <NavbarBrand>
-          <Link className="font-bold text-inherit" href="/">
+          <Link className="font-semibold text-inherit text-2xl" href="/">
             GYM
           </Link>
         </NavbarBrand>
@@ -43,7 +43,7 @@ export const Nav = () => {
 
       <NavbarContent className="hidden sm:flex gap-4 text-white" justify="center">
         <NavbarBrand>
-          <Link href="/" className="font-bold text-inherit">
+          <Link href="/" className="font-semibold text-inherit text-2xl">
             GYM
           </Link>
         </NavbarBrand>
@@ -93,8 +93,9 @@ export const Nav = () => {
                         userData.avatarColor
                           ? {
                               background: `linear-gradient(to right, ${userData.avatarColors[0]}, ${userData.avatarColors[1]})`,
+                              color: 'black',
                             }
-                          : { background: 'gold' }
+                          : { background: 'gold', color: 'black' }
                       }
                     />
                   </DropdownTrigger>

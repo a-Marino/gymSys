@@ -25,7 +25,7 @@ export const Account = function () {
   // };
 
   return !isLoading ? (
-    <div className="px-5 mt-14">
+    <div className="px-5 mt-14 min-h-screen ">
       <h1 className="text-4xl font-semibold ml-2">Account</h1>
       <div className="mt-6 flex items-center gap-10">
         <Avatar
@@ -42,10 +42,10 @@ export const Account = function () {
         />
         <div>
           <p className="text-2xl font-bold">{userData.name}</p>
-          <p className="font-semibold text-black/70">{userData.email}</p>
+          <p className="text-lg text-white/70">{userData.email}</p>
         </div>
       </div>
-      <hr className="my-10" />
+      <Divider className="my-10 dark" />
       {userData.plan && (
         <div className="flex flex-col">
           <h4 className="text-3xl font-semibold">Plan</h4>

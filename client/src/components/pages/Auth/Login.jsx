@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../../../context/AuthContext';
 import { useState } from 'react';
-import { Button } from '../../common/Button';
-import { Input } from '@nextui-org/react';
+import { Input, Button } from '@nextui-org/react';
 import { EyeFilledIcon } from '../../../assets/Icons/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../../../assets/Icons/EyeSlashFilledIcon';
 
@@ -30,13 +29,13 @@ export const Login = function () {
   };
 
   return (
-    <div className="md:px-5 text-center mt-20 w-full">
+    <div className="flex flex-col items-center justify-center text-white h-screen gap-5 -mt-16">
       <div>
-        <h1 className="text-3xl font-bold">Sign In</h1>
+        <h1 className="text-3xl font-semibold">Sign In</h1>
       </div>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col justify-center items-center mx-auto max-w-[60vw] gap-5"
+        className="flex flex-col justify-center items-center gap-5 dark md:w-[50%]"
       >
         <Input
           type="email"
@@ -66,7 +65,9 @@ export const Login = function () {
             {error}
           </p>
         )}
-        <Button className="w-full mt-5 mb-2">Sign In</Button>
+        <Button className="w-full" color="primary" type="submit">
+          Sign In
+        </Button>
       </form>
     </div>
   );
