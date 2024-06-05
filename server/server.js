@@ -43,6 +43,7 @@ app.post('/api/user', jsonParser, async (req, res) => {
         plan: null,
         avatarColors: user.avatarColors,
       });
+      res.status(200).json({ message: 'User created successfully' });
     })
     .catch((err) => {
       res.send(err.message);

@@ -11,29 +11,24 @@ const UserContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState();
 
   const color1 = randomColor();
   const color2 = randomColor();
 
   async function createUser(email, password, name, rol) {
-    axios
-      .post('http://localhost:5000/api/user', {
+    try {
+      const res = await axios.post('http://localhost:5000/api/user', {
         email: email,
         password: password,
         name: name,
         rol: rol,
         avatarColors: [color1, color2],
-      })
-      .then((res) => {
-        setError(res.data);
-        setTimeout(() => {
-          setError(undefined);
-        }, 5000);
-      })
-      .catch((err) => {
-        console.log(err);
       });
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   }
 
   const changePlan = async (userId, planID) => {
@@ -99,7 +94,7 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ createUser, user, logout, login, error, isLoading, userData, changePlan }}
+      value={{ createUser, user, logout, login, isLoading, userData, changePlan }}
     >
       {children}
     </UserContext.Provider>

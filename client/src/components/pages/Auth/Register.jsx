@@ -4,27 +4,36 @@ import { Navigate } from 'react-router-dom';
 import { Button, Input, Select, SelectItem } from '@nextui-org/react';
 import { EyeFilledIcon } from '../../../assets/Icons/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../../../assets/Icons/EyeSlashFilledIcon';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Register = function () {
   const [email, setEmail] = useState('');
   const [rol, setRol] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [success, setSuccess] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
-  const { createUser, error, userData } = UserAuth();
+  const { createUser, userData } = UserAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createUser(email, password, name, rol);
-      if (error != undefined) {
-        setSuccess(true);
-        setTimeout(() => {
-          setSuccess(false);
-        }, 5000);
+      const res = await createUser(email, password, name, rol);
+      if (res && res.message) {
+        toast.success(res.message, {
+          position: 'bottom-right',
+          autoClose: 3000,
+          icon: false,
+          theme: 'colored',
+        });
       }
+      toast.error(res, {
+        position: 'bottom-right',
+        autoClose: 3000,
+        icon: false,
+        theme: 'colored',
+      });
     } catch (err) {
       console.log(err);
     }
@@ -90,19 +99,11 @@ export const Register = function () {
             User
           </SelectItem>
         </Select>
-
-        {error && (
-          <p className="mt-3 bg-red-300  mx-auto rounded-full py-1 text-red-700 ">{error}</p>
-        )}
-        {success && (
-          <p className="mt-3 bg-green-300  mx-auto rounded-full py-1 text-green-700 ">
-            User created successfully
-          </p>
-        )}
-        <Button className="mt-3 mb-2 w-full" color="primary">
+        <Button className="mt-3 mb-2 w-full" color="primary" type="submit">
           Sign Up
         </Button>
       </form>
+      <ToastContainer />
     </div>
   ) : (
     <Navigate to="/" />
