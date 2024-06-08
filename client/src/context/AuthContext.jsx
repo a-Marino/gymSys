@@ -39,6 +39,26 @@ export const AuthContextProvider = ({ children }) => {
     });
   };
 
+  const updateName = async (userId, name) => {
+    const userRef = doc(db, 'users', userId);
+
+    await updateDoc(userRef, {
+      name: name,
+    });
+  };
+
+  const changeEmail = async (userId, email) => {
+    try {
+      const res = await axios.post('http://localhost:5000/api/user/changeEmail', {
+        uid: userId,
+        email: email,
+      });
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
@@ -94,7 +114,17 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ createUser, user, logout, login, isLoading, userData, changePlan }}
+      value={{
+        createUser,
+        user,
+        logout,
+        login,
+        isLoading,
+        userData,
+        changePlan,
+        updateName,
+        changeEmail,
+      }}
     >
       {children}
     </UserContext.Provider>

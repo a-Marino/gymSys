@@ -54,7 +54,7 @@ export const Plans = () => {
       </h1>
       <div className="flex lg:flex-row flex-col gap-5 mt-10 flex-shrink">
         {plans.map((item, index) => (
-          <Card key={index} className="w-[350px] dark mb-10 p-2 border-3 border-primary ">
+          <Card key={index} className="w-[350px] dark mb-10 p-2 border-3 border-primary">
             <CardHeader className="flex gap-3">
               <div className="flex flex-col gap-2">
                 <p className="text-3xl">{item.name}</p>

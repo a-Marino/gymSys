@@ -79,7 +79,7 @@ export const Nav = () => {
       <NavbarContent justify="end">
         <NavbarItem>
           {!userData ? (
-            <Button as={Link} color="primary" href="/login" variant="ghost">
+            <Button as={Link} color="primary" href="/login">
               Login
             </Button>
           ) : (
@@ -90,7 +90,7 @@ export const Nav = () => {
                     <Avatar
                       name={userData.name}
                       style={
-                        userData.avatarColor
+                        userData.avatarColors
                           ? {
                               background: `linear-gradient(to right, ${userData.avatarColors[0]}, ${userData.avatarColors[1]})`,
                               color: 'black',

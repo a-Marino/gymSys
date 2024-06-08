@@ -50,6 +50,23 @@ app.post('/api/user', jsonParser, async (req, res) => {
     });
 });
 
+app.post('/api/user/changeEmail', jsonParser, async (req, res) => {
+  const user = req.body;
+  await getAuth()
+    .updateUser(user.uid, {
+      email: user.email,
+    })
+    .then((UserRecord) => {
+      db.collection('users').doc(UserRecord.uid).update({
+        email: user.email,
+      });
+      res.status(200).json({ message: 'Email changed successfully' });
+    })
+    .catch((err) => {
+      res.send(err.message);
+    });
+});
+
 app.listen(5000, () => {
   console.log('Server started at PORT 5000');
 });

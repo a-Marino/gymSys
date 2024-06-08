@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../../../context/AuthContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input, Button } from '@nextui-org/react';
 import { EyeFilledIcon } from '../../../assets/Icons/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../../../assets/Icons/EyeSlashFilledIcon';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Login = function () {
   const { login } = UserAuth();
@@ -27,6 +29,21 @@ export const Login = function () {
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
   };
+
+  useEffect(() => {
+    const emailChanged = sessionStorage.getItem('emailChanged');
+
+    if (emailChanged) {
+      toast.success('Your email has been changed', {
+        position: 'bottom-right',
+        autoClose: 2000,
+        icon: false,
+        theme: 'colored',
+      });
+
+      sessionStorage.removeItem('emailChanged');
+    }
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center text-white h-screen gap-5 -mt-16">
@@ -69,6 +86,7 @@ export const Login = function () {
           Sign In
         </Button>
       </form>
+      <ToastContainer />
     </div>
   );
 };
