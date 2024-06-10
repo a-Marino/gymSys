@@ -28,7 +28,7 @@ app.use(
   })
 );
 
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
   res.send('API running');
 });
 
