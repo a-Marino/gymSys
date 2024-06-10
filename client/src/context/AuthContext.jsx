@@ -17,7 +17,7 @@ export const AuthContextProvider = ({ children }) => {
 
   async function createUser(email, password, name, rol) {
     try {
-      const res = await axios.post('http://localhost:5000/api/user', {
+      const res = await axios.post('https://gym-sys.vercel.app/api/user', {
         email: email,
         password: password,
         name: name,
@@ -49,7 +49,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const changeEmail = async (userId, email) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/user/changeEmail', {
+      const res = await axios.post('https://gym-sys.vercel.app/api/user/changeEmail', {
         uid: userId,
         email: email,
       });
