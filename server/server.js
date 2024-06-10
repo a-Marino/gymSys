@@ -2,16 +2,21 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { initializeApp, cert } from 'firebase-admin/app';
-import serviceAccount from './serviceAccountKey.json' assert { type: 'json' };
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
+import 'dotenv/config';
 
 const app = express();
 
-initializeApp({
-  credential: cert(serviceAccount),
-});
+const { privateKey } = JSON.parse(process.env.PRIVATE_KEY);
 
+initializeApp({
+  credential: cert({
+    projectId: process.env.PROJECT_ID,
+    clientEmail: process.env.CLIENT_EMAIL,
+    privateKey: privateKey,
+  }),
+});
 const db = getFirestore();
 
 const jsonParser = bodyParser.json();
