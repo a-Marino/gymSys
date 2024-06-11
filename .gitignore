@@ -15,6 +15,7 @@ dist-ssr
 
 # Editor directories and files
 .env
+.npmrc
 *.env
 .vscode/*
 !.vscode/extensions.json
