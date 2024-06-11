@@ -28,15 +28,13 @@ export const Plans = () => {
   const handleClick = (planID) => {
     if (!user) {
       toast.error('You must be logged in', {
-        position: 'bottom-right',
-        autoClose: 3000,
+        autoClose: 2000,
         icon: false,
         theme: 'colored',
       });
     } else {
       changePlan(user.uid, planID);
       toast.success('Your plan has been updated', {
-        position: 'bottom-right',
         autoClose: 3000,
         icon: false,
         theme: 'colored',
@@ -89,7 +87,7 @@ export const Plans = () => {
           </Card>
         ))}
       </div>
-      <ToastContainer />
+      <ToastContainer stacked position="bottom-right" closeButton={false} />
     </div>
   ) : (
     <div className="flex items-center justify-center h-screen -mt-16">

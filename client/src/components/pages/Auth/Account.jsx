@@ -10,10 +10,19 @@ import {
   Divider,
   Link,
   Input,
-  Tooltip,
 } from '@nextui-org/react';
+import {
+  Credenza,
+  CredenzaBody,
+  CredenzaClose,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from '../../common/Credenza';
 import { Pencil, CircleAlert } from 'lucide-react';
-import { CustomModal } from '../../common/Modal';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -77,63 +86,79 @@ export const Account = function () {
         <div className="flex flex-col">
           <div className="flex items-center gap-4">
             <p className="text-2xl font-bold">{userData.name}</p>
-            <CustomModal
-              title="Change name"
-              onAction={handleChangeName}
-              trigger={(onOpen) => (
-                <Tooltip content="Change name">
-                  <Pencil
-                    size={25}
-                    className="border-2 rounded-md p-1 hover:border-primary hover:text-primary transition-colors duration-150"
-                    onClick={onOpen}
+            <Credenza>
+              <CredenzaTrigger asChild>
+                <Pencil
+                  size={25}
+                  className="border-2 rounded-md p-1 hover:border-primary hover:text-primary transition-colors duration-150"
+                />
+              </CredenzaTrigger>
+              <CredenzaContent>
+                <CredenzaHeader>
+                  <CredenzaTitle>Change name</CredenzaTitle>
+                  <CredenzaDescription>You can change your name here</CredenzaDescription>
+                </CredenzaHeader>
+                <CredenzaBody>
+                  <Input
+                    autoFocus
+                    type="text"
+                    label="Name"
+                    labelPlacement="inside"
+                    variant="bordered"
+                    defaultValue={userData.name}
+                    onChange={(e) => setName(e.target.value)}
                   />
-                </Tooltip>
-              )}
-            >
-              <Input
-                autoFocus
-                type="text"
-                label="Name"
-                labelPlacement="inside"
-                variant="bordered"
-                defaultValue={userData.name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </CustomModal>
+                </CredenzaBody>
+                <CredenzaFooter>
+                  <CredenzaClose asChild>
+                    <Button color="primary" onClick={handleChangeName}>
+                      Save
+                    </Button>
+                  </CredenzaClose>
+                </CredenzaFooter>
+              </CredenzaContent>
+            </Credenza>
           </div>
           <div className="flex items-center gap-4">
             <p className="text-lg text-white/70">{userData.email}</p>
-            <CustomModal
-              title="Change email"
-              onAction={handleChangeEmail}
-              trigger={(onOpen) => (
-                <Tooltip content="Change email">
-                  <Pencil
-                    size={25}
-                    className="border-2 rounded-md p-1 hover:border-primary hover:text-primary transition-colors duration-150"
-                    onClick={onOpen}
+            <Credenza>
+              <CredenzaTrigger asChild>
+                <Pencil
+                  size={25}
+                  className="border-2 rounded-md p-1 hover:border-primary hover:text-primary transition-colors duration-150"
+                />
+              </CredenzaTrigger>
+              <CredenzaContent>
+                <CredenzaHeader>
+                  <CredenzaTitle className="mb-2">Change email</CredenzaTitle>
+                  <CredenzaDescription className="flex gap-3 items-center bg-danger/10 p-2 rounded-lg text-danger">
+                    <CircleAlert size={40} />
+                    <span>
+                      <span className="font-bold">IMPORTANT:</span> If you change your email
+                      you&apos;ll be loged out, and you&apos;ll have to sing in again.
+                    </span>
+                  </CredenzaDescription>
+                </CredenzaHeader>
+                <CredenzaBody>
+                  <Input
+                    autoFocus
+                    type="email"
+                    label="Email"
+                    labelPlacement="inside"
+                    variant="bordered"
+                    defaultValue={userData.email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
-                </Tooltip>
-              )}
-            >
-              <div className="flex gap-3 items-center bg-danger/10 p-2 rounded-lg text-danger">
-                <CircleAlert size={40} />
-                <p>
-                  <span className="font-bold">IMPORTANT:</span> If you change your email you&apos;ll
-                  be loged out, and you&apos;ll have to sing in again.
-                </p>
-              </div>
-
-              <Input
-                autoFocus
-                type="email"
-                label="Email"
-                labelPlacement="inside"
-                variant="bordered"
-                defaultValue={userData.email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </CustomModal>
+                </CredenzaBody>
+                <CredenzaFooter>
+                  <CredenzaClose asChild>
+                    <Button color="primary" onClick={handleChangeEmail}>
+                      Save
+                    </Button>
+                  </CredenzaClose>
+                </CredenzaFooter>
+              </CredenzaContent>
+            </Credenza>
           </div>
         </div>
       </div>
@@ -171,7 +196,7 @@ export const Account = function () {
           </Card>
         </div>
       )}
-      <ToastContainer />
+      <ToastContainer closeButton={false} />
     </div>
   ) : (
     <div className="flex items-center justify-center h-[90vh]">
