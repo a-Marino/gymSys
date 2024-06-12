@@ -37,7 +37,8 @@ export const Plans = () => {
       toast.success('Your plan has been updated', {
         autoClose: 3000,
         icon: false,
-        theme: 'colored',
+        className: 'bg-success text-white',
+        hideProgressBar: true,
       });
     }
   };

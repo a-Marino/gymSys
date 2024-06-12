@@ -14,7 +14,7 @@ export const Register = function () {
   const [password, setPassword] = useState('');
   const [isVisible, setIsVisible] = useState(false);
 
-  const { createUser, userData } = UserAuth();
+  const { createUser, user } = UserAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,14 +23,15 @@ export const Register = function () {
       if (res && res.message) {
         toast.success(res.message, {
           position: 'bottom-right',
-          autoClose: 3000,
+          autoClose: 2000,
           icon: false,
-          theme: 'colored',
+          className: 'bg-success text-white',
+          hideProgressBar: true,
         });
       }
       toast.error(res, {
         position: 'bottom-right',
-        autoClose: 3000,
+        autoClose: 2000,
         icon: false,
         theme: 'colored',
       });
@@ -43,7 +44,7 @@ export const Register = function () {
     setIsVisible(!isVisible);
   };
 
-  return userData && userData.rol === 'admin' ? (
+  return user && user.rol === 'admin' ? (
     <div className="flex flex-col items-center justify-center text-white min-h-screen w-full dark gap-5">
       <div>
         <h1 className="text-3xl font-bold">Sign up</h1>
