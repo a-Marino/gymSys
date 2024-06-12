@@ -17,7 +17,7 @@ import {
 import { UserAuth } from '../../../context/AuthContext';
 
 export const Nav = () => {
-  const { logout, userData } = UserAuth();
+  const { logout, userData, user } = UserAuth();
 
   const handleLogout = async () => {
     try {
@@ -109,7 +109,20 @@ export const Nav = () => {
                   </DropdownMenu>
                 </Dropdown>
               </div>
-              <Avatar as={Link} href="/account" name={userData.name} className="md:hidden" />
+              <Avatar
+                as={Link}
+                href="/account"
+                name={userData.name}
+                className="md:hidden"
+                style={
+                  userData.avatarColors
+                    ? {
+                        background: `linear-gradient(to right, ${userData.avatarColors[0]}, ${userData.avatarColors[1]})`,
+                        color: 'black',
+                      }
+                    : { background: 'gold', color: 'black' }
+                }
+              />
             </div>
           )}
         </NavbarItem>

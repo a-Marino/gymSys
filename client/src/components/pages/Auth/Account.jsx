@@ -27,65 +27,64 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const Account = function () {
-  const { userData, isLoading, updateName, changeEmail, logout } = UserAuth();
+  const { isLoading, updateName, changeEmail, logout, setUser, user } = UserAuth();
   const [name, setName] = useState();
   const [email, setEmail] = useState();
 
   const handleChangeName = async () => {
     try {
       if (!name) return;
-      await updateName(userData.uid, name).then(() => {
-        sessionStorage.setItem('nameChanged', 'true');
-        window.location.reload();
+      await updateName(user.uid, name);
+      setUser((prevUser) => {
+        const updatedUser = { ...prevUser, name: name };
+        localStorage.setItem('userData', JSON.stringify(updatedUser));
+        return updatedUser;
       });
-    } catch {
-      console.log('error');
+      toast('Your name has been changed', {
+        position: 'bottom-right',
+        autoClose: 2000,
+        icon: false,
+        className: 'bg-success text-white',
+        hideProgressBar: true,
+      });
+    } catch (err) {
+      console.log(err);
     }
   };
 
   const handleChangeEmail = async () => {
     if (!email) return;
-    if (email === userData.email) return;
-    await changeEmail(userData.uid, email).then(() => {
+    if (email === user.email) return;
+    await changeEmail(user.uid, email).then(() => {
       sessionStorage.setItem('emailChanged', 'true');
       logout();
     });
   };
 
   useEffect(() => {
-    const nameChanged = sessionStorage.getItem('nameChanged');
-
-    if (nameChanged) {
-      toast.success('Your name has been changed', {
-        position: 'bottom-right',
-        autoClose: 2000,
-        icon: false,
-        theme: 'colored',
-      });
-
-      sessionStorage.removeItem('nameChanged');
-    }
-  }, []);
+    setName(user?.name || '');
+    setEmail(user?.email || '');
+  }, [user]);
 
   return !isLoading ? (
-    <div className="px-5 mt-14 min-h-screen ">
-      <h1 className="text-4xl font-semibold ml-2">Account</h1>
-      <div className="mt-6 flex items-center gap-10">
+    <div className="px-5 mt-14 min-h-screen">
+      <h1 className="text-4xl font-semibold ">Account</h1>
+      <div className="mt-6 flex md:items-center gap-10 md:flex-row flex-col">
         <Avatar
-          name={userData.name}
+          name={user.name}
           className="h-32 w-32 text-2xl"
           isBordered
           style={
-            userData.avatarColors
+            user.avatarColors
               ? {
-                  background: `linear-gradient(to right, ${userData.avatarColors[0]}, ${userData.avatarColors[1]})`,
+                  background: `linear-gradient(to right, ${user.avatarColors[0]}, ${user.avatarColors[1]})`,
                 }
               : { background: 'gold' }
           }
         />
         <div className="flex flex-col">
           <div className="flex items-center gap-4">
-            <p className="text-2xl font-bold">{userData.name}</p>
+            <p className="text-2xl font-bold">{user.name}</p>
             <Credenza>
               <CredenzaTrigger asChild>
                 <Pencil
@@ -100,12 +99,11 @@ export const Account = function () {
                 </CredenzaHeader>
                 <CredenzaBody>
                   <Input
-                    autoFocus
                     type="text"
                     label="Name"
                     labelPlacement="inside"
                     variant="bordered"
-                    defaultValue={userData.name}
+                    defaultValue={user.name}
                     onChange={(e) => setName(e.target.value)}
                   />
                 </CredenzaBody>
@@ -120,7 +118,7 @@ export const Account = function () {
             </Credenza>
           </div>
           <div className="flex items-center gap-4">
-            <p className="text-lg text-white/70">{userData.email}</p>
+            <p className="text-lg text-white/70">{user.email}</p>
             <Credenza>
               <CredenzaTrigger asChild>
                 <Pencil
@@ -141,12 +139,11 @@ export const Account = function () {
                 </CredenzaHeader>
                 <CredenzaBody>
                   <Input
-                    autoFocus
                     type="email"
                     label="Email"
                     labelPlacement="inside"
                     variant="bordered"
-                    defaultValue={userData.email}
+                    defaultValue={user.email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </CredenzaBody>
@@ -163,19 +160,19 @@ export const Account = function () {
         </div>
       </div>
       <Divider className="my-10 dark" />
-      {userData.plan && (
+      {user.plan && (
         <div className="flex flex-col">
           <h4 className="text-3xl font-semibold">Plan</h4>
           <Card className="w-[350px] dark mb-10 p-2 mt-10">
             <CardHeader className="flex gap-3">
               <div className="flex flex-col gap-2">
-                <p className="text-3xl">{userData.plan.name}</p>
-                <p className="text-white/30 text-sm h-14">{userData.plan.description}</p>
+                <p className="text-3xl">{user.plan.name}</p>
+                <p className="text-white/30 text-sm h-14">{user.plan.description}</p>
               </div>
             </CardHeader>
             <CardBody>
               <div className="flex flex-col">
-                <p className="text-3xl">${userData.plan.price}</p>
+                <p className="text-3xl">${user.plan.price}</p>
                 <ul className="text-xs mt-1 gap-2 text-white/70">
                   <li>Paid Monthly</li>
                   <li>Pause or cancel at any time.</li>
@@ -186,7 +183,7 @@ export const Account = function () {
               </div>
               <Divider />
               <div className="mt-5 flex flex-col mb-2">
-                {userData.plan.benefits.map((item, index) => (
+                {user.plan.benefits.map((item, index) => (
                   <ul key={index} className="list-disc px-5">
                     <li>{item}</li>
                   </ul>

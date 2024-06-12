@@ -38,7 +38,8 @@ export const Login = function () {
         position: 'bottom-right',
         autoClose: 2000,
         icon: false,
-        theme: 'colored',
+        className: 'bg-success text-white',
+        hideProgressBar: true,
       });
 
       sessionStorage.removeItem('emailChanged');

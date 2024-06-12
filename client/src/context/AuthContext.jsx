@@ -88,21 +88,17 @@ export const AuthContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        getUserData(currentUser.uid).then((data) => {
-          const userData = {
-            uid: currentUser.uid,
-            ...data,
-          };
-          setIsLoading(false);
-          localStorage.setItem('userData', JSON.stringify(userData));
-          setUser(userData);
-        });
+        const data = await getUserData(currentUser.uid);
+        const userData = { uid: currentUser.uid, ...data };
+        setUser(userData);
+        localStorage.setItem('userData', JSON.stringify(userData));
       } else {
         localStorage.clear();
         setUser(null);
       }
+      setIsLoading(false);
     });
     return () => {
       unsubscribe();
@@ -124,6 +120,8 @@ export const AuthContextProvider = ({ children }) => {
         changePlan,
         updateName,
         changeEmail,
+        setUser,
+        userData,
       }}
     >
       {children}
