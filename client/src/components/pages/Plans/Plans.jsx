@@ -25,7 +25,7 @@ export const Plans = () => {
     };
   };
 
-  const handleClick = (planID) => {
+  const handleClick = async (planID) => {
     if (!user) {
       toast.error('You must be logged in', {
         autoClose: 2000,
@@ -33,8 +33,8 @@ export const Plans = () => {
         theme: 'colored',
       });
     } else {
-      changePlan(user.uid, planID);
-      toast.success('Your plan has been updated', {
+      const res = await changePlan(user.uid, planID);
+      toast.success(res.message, {
         autoClose: 3000,
         icon: false,
         className: 'bg-success text-white',

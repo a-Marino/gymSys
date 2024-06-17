@@ -30,25 +30,33 @@ export const AuthContextProvider = ({ children }) => {
     }
   }
 
-  const changePlan = async (userId, planID) => {
-    const userRef = doc(db, 'users', userId);
-
-    await updateDoc(userRef, {
-      plan: doc(db, `plans/${planID}`),
-    });
+  const changePlan = async (userID, planID) => {
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user/changePlan`, {
+        uid: userID,
+        planID: planID,
+      });
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const updateName = async (userId, name) => {
-    const userRef = doc(db, 'users', userId);
-
-    await updateDoc(userRef, {
-      name: name,
-    });
+  const updateName = async (userID, name) => {
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user/changeName`, {
+        uid: userID,
+        name: name,
+      });
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const changeEmail = async (userId, email) => {
     try {
-      const res = await axios.post(`${import.meta.env.VITE_GYM_API_URL}/api/user/changeEmail`, {
+      const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user/changeEmail`, {
         uid: userId,
         email: email,
       });

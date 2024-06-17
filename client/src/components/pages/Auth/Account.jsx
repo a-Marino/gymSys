@@ -34,13 +34,13 @@ export const Account = function () {
   const handleChangeName = async () => {
     try {
       if (!name) return;
-      await updateName(user.uid, name);
+      const res = await updateName(user.uid, name);
       setUser((prevUser) => {
         const updatedUser = { ...prevUser, name: name };
         localStorage.setItem('userData', JSON.stringify(updatedUser));
         return updatedUser;
       });
-      toast('Your name has been changed', {
+      toast(res.message, {
         position: 'bottom-right',
         autoClose: 2000,
         icon: false,

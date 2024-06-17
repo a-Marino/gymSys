@@ -56,23 +56,51 @@ app.post('/api/user', jsonParser, async (req, res) => {
     });
     res.status(200).json({ message: 'User created successfully' });
   } catch (err) {
-    console.log(err);
     res.send(err.message);
   }
 });
 
-app.post('/api/user/changeEmail', jsonParser, async (req, res) => {
+app.put('/api/user/changeEmail', jsonParser, async (req, res) => {
   const user = req.body;
   try {
     const userRecord = await auth.updateUser(user.uid, {
       email: user.email,
     });
 
-    await db.collection('users').doc(UserRecord.uid).update({
+    await db.collection('users').doc(userRecord.uid).update({
       email: user.email,
     });
 
-    res.status(200).json({ message: 'Email changed successfully' });
+    res.status(200).json({ message: 'Email changed successfully.' });
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
+app.put('/api/user/changePlan', jsonParser, async (req, res) => {
+  const user = req.body;
+  try {
+    await db
+      .collection('users')
+      .doc(user.uid)
+      .update({
+        plan: db.collection('plans').doc(user.planID),
+      });
+
+    res.status(200).json({ message: 'Your plan has been updated.' });
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
+app.put('/api/user/changeName', jsonParser, async (req, res) => {
+  const user = req.body;
+  try {
+    await db.collection('users').doc(user.uid).update({
+      name: user.name,
+    });
+
+    res.status(200).json({ message: 'Name changed successfully.' });
   } catch (err) {
     res.send(err.message);
   }
