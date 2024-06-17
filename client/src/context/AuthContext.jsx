@@ -17,7 +17,7 @@ export const AuthContextProvider = ({ children }) => {
 
   async function createUser(email, password, name, rol) {
     try {
-      const res = await axios.post('https://gym-sys.vercel.app/api/user', {
+      const res = await axios.post(`${import.meta.env.VITE_GYM_API_URL}/api/user`, {
         email: email,
         password: password,
         name: name,
@@ -26,7 +26,6 @@ export const AuthContextProvider = ({ children }) => {
       });
       return res.data;
     } catch (err) {
-      console.log(err);
       throw err;
     }
   }
@@ -49,7 +48,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const changeEmail = async (userId, email) => {
     try {
-      const res = await axios.post('https://gym-sys.vercel.app/api/user/changeEmail', {
+      const res = await axios.post(`${import.meta.env.VITE_GYM_API_URL}/api/user/changeEmail`, {
         uid: userId,
         email: email,
       });
@@ -121,7 +120,6 @@ export const AuthContextProvider = ({ children }) => {
         updateName,
         changeEmail,
         setUser,
-        userData,
       }}
     >
       {children}

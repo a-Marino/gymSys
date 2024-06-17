@@ -14,7 +14,7 @@ export const Register = function () {
   const [password, setPassword] = useState('');
   const [isVisible, setIsVisible] = useState(false);
 
-  const { createUser, user } = UserAuth();
+  const { createUser, userData } = UserAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +44,7 @@ export const Register = function () {
     setIsVisible(!isVisible);
   };
 
-  return user && user.rol === 'admin' ? (
+  return userData && userData.rol === 'admin' ? (
     <div className="flex flex-col items-center justify-center text-white min-h-screen w-full dark gap-5">
       <div>
         <h1 className="text-3xl font-bold">Sign up</h1>

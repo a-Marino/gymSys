@@ -9,5 +9,5 @@
 
 - mapa 
 
-- 
+- usar variables de entorno para las apis // local - prod 
 
