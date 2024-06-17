@@ -17,7 +17,9 @@ initializeApp({
     privateKey: privateKey,
   }),
 });
+
 const db = getFirestore();
+const auth = getAuth();
 
 const jsonParser = bodyParser.json();
 
@@ -38,42 +40,42 @@ app.get('/', (req, res) => {
 
 app.post('/api/user', jsonParser, async (req, res) => {
   const user = req.body;
-  await getAuth()
-    .createUser({
+  try {
+    const userRecord = await auth.createUser({
       email: user.email,
       password: user.password,
-      displayName: user.name,
-    })
-    .then((UserRecord) => {
-      db.collection('users').doc(UserRecord.uid).set({
-        email: user.email,
-        name: user.name,
-        rol: user.rol,
-        plan: null,
-        avatarColors: user.avatarColors,
-      });
-      res.status(200).json({ message: 'User created successfully' });
-    })
-    .catch((err) => {
-      res.send(err.message);
+      displayName: user.displayName,
     });
+
+    await db.collection('users').doc(userRecord.uid).set({
+      email: user.email,
+      name: user.name,
+      rol: user.rol,
+      plan: null,
+      avatarColors: user.avatarColors,
+    });
+    res.status(200).json({ message: 'User created successfully' });
+  } catch (err) {
+    console.log(err);
+    res.send(err.message);
+  }
 });
 
 app.post('/api/user/changeEmail', jsonParser, async (req, res) => {
   const user = req.body;
-  await getAuth()
-    .updateUser(user.uid, {
+  try {
+    const userRecord = await auth.updateUser(user.uid, {
       email: user.email,
-    })
-    .then((UserRecord) => {
-      db.collection('users').doc(UserRecord.uid).update({
-        email: user.email,
-      });
-      res.status(200).json({ message: 'Email changed successfully' });
-    })
-    .catch((err) => {
-      res.send(err.message);
     });
+
+    await db.collection('users').doc(UserRecord.uid).update({
+      email: user.email,
+    });
+
+    res.status(200).json({ message: 'Email changed successfully' });
+  } catch (err) {
+    res.send(err.message);
+  }
 });
 
 app.listen(5000, () => {
