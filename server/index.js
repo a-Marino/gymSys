@@ -23,7 +23,11 @@ const jsonParser = bodyParser.json();
 
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://gym-sys.vercel.app'],
+    origin: [
+      'http://localhost:5173',
+      'https://gym-sys.vercel.app',
+      'https://gym-server-flax.vercel.app',
+    ],
     credentials: true,
   })
 );
