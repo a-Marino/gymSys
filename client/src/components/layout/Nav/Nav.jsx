@@ -69,8 +69,8 @@ export const Nav = () => {
         </NavbarItem>
         {userData && userData.rol === 'admin' && (
           <NavbarItem>
-            <Link className="text-blue-600" href="/register">
-              Add User
+            <Link className="text-blue-600" href="/users">
+              User List
             </Link>
           </NavbarItem>
         )}
@@ -148,8 +148,8 @@ export const Nav = () => {
             </Link>
           )}
           {userData && userData.rol === 'admin' && (
-            <Link className="w-full text-blue-600" href="/register" size="lg">
-              Add User
+            <Link className="w-full text-blue-600" href="/users" size="lg">
+              User List
             </Link>
           )}
           {userData && (
