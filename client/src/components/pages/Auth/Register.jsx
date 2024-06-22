@@ -1,43 +1,19 @@
 import { useState } from 'react';
-import { UserAuth } from '../../../context/AuthContext';
 import { Input } from '@nextui-org/react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../common/Select';
 import { EyeFilledIcon } from '../../../assets/Icons/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../../../assets/Icons/EyeSlashFilledIcon';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
-export const Register = function () {
+export const Register = function ({ handleSubmit }) {
   const [email, setEmail] = useState('');
   const [rol, setRol] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [isVisible, setIsVisible] = useState(false);
 
-  const { createUser, userData } = UserAuth();
-
-  const handleSubmit = async (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-    try {
-      const res = await createUser(email, password, name, rol);
-      if (res && res.message) {
-        toast.success(res.message, {
-          position: 'bottom-right',
-          autoClose: 2000,
-          icon: false,
-          className: 'bg-success text-white',
-          hideProgressBar: true,
-        });
-      }
-      toast.error(res, {
-        position: 'bottom-right',
-        autoClose: 2000,
-        icon: false,
-        theme: 'colored',
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    handleSubmit(email, password, name, rol);
   };
 
   const toggleVisibility = () => {
@@ -45,10 +21,12 @@ export const Register = function () {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center text-white w-full dark gap-5">
+    <div className="flex flex-col items-center justify-center text-white dark gap-5">
       <form
-        onSubmit={handleSubmit}
-        className="flex flex-col items-center justify-center gap-5 w-[60%]"
+        id="registerForm"
+        name="registerForm"
+        onSubmit={onSubmit}
+        className="flex flex-col items-center justify-center gap-5 w-[100%]"
       >
         <Input
           type="text"
@@ -81,7 +59,14 @@ export const Register = function () {
           type={isVisible ? 'text' : 'password'}
           variant="bordered"
         />
-        <Select id="rol" name="rol" onChange={(e) => setRol(e.target.value)} required>
+        <Select
+          id="rol"
+          name="rol"
+          onValueChange={(rol) => {
+            setRol(rol);
+          }}
+          required
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select a role" />
           </SelectTrigger>
@@ -95,7 +80,6 @@ export const Register = function () {
           </SelectContent>
         </Select>
       </form>
-      <ToastContainer />
     </div>
   );
 };

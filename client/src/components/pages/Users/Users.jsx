@@ -33,7 +33,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Register } from '../Auth/Register';
 
 export const Users = () => {
-  const { userData, changeUserStatus } = UserAuth();
+  const { userData, changeUserStatus, createUser } = UserAuth();
 
   const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -49,6 +49,30 @@ export const Users = () => {
     { name: 'STATUS', uid: 'status' },
     { name: 'ACTIONS', uid: 'actions' },
   ];
+
+  const handleSubmit = async (email, password, name, rol) => {
+    try {
+      const res = await createUser(email, password, name, rol);
+      if (res && res.message) {
+        toast.success(res.message, {
+          position: 'bottom-right',
+          autoClose: 2000,
+          icon: false,
+          className: 'bg-success text-white',
+          hideProgressBar: true,
+        });
+        mutate();
+      }
+      toast.error(res, {
+        position: 'bottom-right',
+        autoClose: 2000,
+        icon: false,
+        theme: 'colored',
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleStatusChange = async (userID) => {
     document.body.style.cursor = 'wait';
@@ -93,17 +117,16 @@ export const Users = () => {
               </CredenzaTrigger>
               <CredenzaContent>
                 <CredenzaHeader>
-                  <CredenzaTitle>Add New User</CredenzaTitle>
+                  <CredenzaTitle className="mb-3">Add New User</CredenzaTitle>
                 </CredenzaHeader>
                 <CredenzaBody>
-                  <Register />
+                  <Register handleSubmit={handleSubmit} />
                 </CredenzaBody>
                 <CredenzaFooter>
-                  <CredenzaClose asChild>
-                    <Button color="primary" type="submit">
-                      Add
-                    </Button>
-                  </CredenzaClose>
+                  <Button color="primary" type="submit" form="registerForm" CredenzaClose>
+                    Add
+                  </Button>
+                  <CredenzaClose asChild></CredenzaClose>
                 </CredenzaFooter>
               </CredenzaContent>
             </Credenza>
@@ -112,9 +135,7 @@ export const Users = () => {
           <Table aria-label="List of Users">
             <TableHeader>
               {columns.map((column) => (
-                <TableColumn key={column.uid} align={column.uid === 'actions' ? 'center' : 'start'}>
-                  {column.name}
-                </TableColumn>
+                <TableColumn key={column.uid}>{column.name}</TableColumn>
               ))}
             </TableHeader>
             <TableBody>
