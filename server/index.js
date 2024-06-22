@@ -34,8 +34,62 @@ app.use(
   })
 );
 
+const getUserDetailsFromFirestore = async (uid) => {
+  const userDoc = await db.collection('users').doc(uid).get();
+  if (!userDoc.exists) {
+    return null;
+  }
+  const userData = userDoc.data();
+
+  let planData = {};
+  if (userData.plan) {
+    const planDoc = await userData.plan.get();
+    if (planDoc.exists) {
+      const planDocData = planDoc.data();
+      planData = {
+        id: planDoc.id,
+        name: planDocData.name,
+      };
+    }
+  }
+
+  return {
+    ...userData,
+    plan: planData,
+  };
+};
+
 app.get('/', (req, res) => {
-  res.send('API running');
+  res.send('API running - Welcome to Andres Marino GYM API');
+});
+
+app.get('/api/users', jsonParser, async (req, res) => {
+  try {
+    const listAllUsers = async (nextPageToken) => {
+      let users = [];
+      const listUsersResult = await auth.listUsers(1000, nextPageToken);
+      for (const userRecord of listUsersResult.users) {
+        const userInfo = userRecord.toJSON();
+        const additionalInfo = await getUserDetailsFromFirestore(userRecord.uid);
+        users.push({
+          uid: userInfo.uid,
+          name: userInfo.name,
+          email: userInfo.email,
+          disabled: userInfo.disabled,
+          ...additionalInfo,
+        });
+      }
+      if (listUsersResult.pageToken) {
+        users = users.concat(await listAllUsers(listUsersResult.pageToken));
+      }
+      return users;
+    };
+
+    const users = await listAllUsers();
+    res.status(200).json(users);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.post('/api/user', jsonParser, async (req, res) => {
@@ -88,6 +142,30 @@ app.put('/api/user/changePlan', jsonParser, async (req, res) => {
       });
 
     res.status(200).json({ message: 'Your plan has been updated.' });
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
+app.put('/api/user/changeStatus', jsonParser, async (req, res) => {
+  const { uid } = req.body;
+
+  if (!uid) {
+    return res.status(400).send({ message: 'User ID (uid) is required' });
+  }
+
+  try {
+    const userRecord = await auth.getUser(uid);
+
+    const newStatus = !userRecord.disabled;
+
+    await auth.updateUser(uid, { disabled: newStatus });
+
+    res.status(200).send({
+      message: `User ${newStatus ? 'disabled' : 'enabled'} successfully`,
+      uid,
+      disabled: newStatus,
+    });
   } catch (err) {
     res.send(err.message);
   }

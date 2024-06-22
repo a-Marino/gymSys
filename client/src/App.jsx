@@ -11,6 +11,7 @@ import {
 import { Layout } from './components/layout/Layout';
 import { Plans } from './components/pages/Plans/Plans';
 import { Classes } from './components/pages/Classes/Classes';
+import { Users } from './components/pages/Users/Users';
 
 function App() {
   return (
@@ -22,8 +23,9 @@ function App() {
             <Route path="/plans" element={<Plans />} />
             <Route path="/classes" element={<Classes />} />
             <Route element={<ProtectedRouteUserUnloged />}>
-              <Route path="/register" element={<Register />} />
+              {/* <Route path="/register" element={<Register />} /> */}
               <Route path="/account" element={<Account />} />
+              <Route path="/users" element={<Users />} />
             </Route>
             <Route
               path="/login"

@@ -30,6 +30,17 @@ export const AuthContextProvider = ({ children }) => {
     }
   }
 
+  const changeUserStatus = async (userID) => {
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user/changeStatus`, {
+        uid: userID,
+      });
+      return res.data;
+    } catch (err) {
+      throw err;
+    }
+  };
+
   const changePlan = async (userID, planID) => {
     try {
       const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user/changePlan`, {
@@ -128,6 +139,7 @@ export const AuthContextProvider = ({ children }) => {
         updateName,
         changeEmail,
         setUser,
+        changeUserStatus,
       }}
     >
       {children}
