@@ -24,15 +24,16 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from '../../common/Credenza';
-import { Eye, Pencil, UserRoundX, UserRoundCheck, Plus } from 'lucide-react';
+import { Pencil, UserRoundX, UserRoundCheck, Plus, User as UserIcon } from 'lucide-react';
 import useSWR from 'swr';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Register } from '../Auth/Register';
 
 export const Users = () => {
+  const [open, setOpen] = useState(false);
   const { userData, changeUserStatus, createUser } = UserAuth();
 
   const fetcher = (url) => axios.get(url).then((res) => res.data);
@@ -45,7 +46,7 @@ export const Users = () => {
 
   const columns = [
     { name: 'NAME', uid: 'name' },
-    { name: 'ROL', uid: 'rol' },
+    { name: 'ROL', uid: 'rol', className: 'hidden md:table-cell' },
     { name: 'STATUS', uid: 'status' },
     { name: 'ACTIONS', uid: 'actions' },
   ];
@@ -61,6 +62,7 @@ export const Users = () => {
           className: 'bg-success text-white',
           hideProgressBar: true,
         });
+        setOpen(false);
         mutate();
       }
       toast.error(res, {
@@ -109,7 +111,7 @@ export const Users = () => {
       {!isLoading ? (
         <div>
           <div className="mb-7">
-            <Credenza>
+            <Credenza open={open} onOpenChange={setOpen}>
               <CredenzaTrigger asChild>
                 <Button color="primary" endContent={<Plus />}>
                   Add New
@@ -126,7 +128,6 @@ export const Users = () => {
                   <Button color="primary" type="submit" form="registerForm" CredenzaClose>
                     Add
                   </Button>
-                  <CredenzaClose asChild></CredenzaClose>
                 </CredenzaFooter>
               </CredenzaContent>
             </Credenza>
@@ -135,13 +136,15 @@ export const Users = () => {
           <Table aria-label="List of Users">
             <TableHeader>
               {columns.map((column) => (
-                <TableColumn key={column.uid}>{column.name}</TableColumn>
+                <TableColumn key={column.uid} className={column.className}>
+                  {column.name}
+                </TableColumn>
               ))}
             </TableHeader>
             <TableBody>
               {users.map((user) => (
                 <TableRow key={user.uid}>
-                  <TableCell>
+                  <TableCell className="flex items-center gap-5">
                     <User
                       avatarProps={{
                         name: user.name,
@@ -158,15 +161,20 @@ export const Users = () => {
                     >
                       {user.email}
                     </User>
+                    {userData.uid === user.uid && (
+                      <Tooltip content="You">
+                        <UserIcon size={20} />
+                      </Tooltip>
+                    )}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden md:table-cell">
                     <div className="flex flex-col">
                       <p className="text-bold text-sm capitalize">{user.rol}</p>
                     </div>
                   </TableCell>
                   <TableCell>
                     <Chip
-                      className="capitalize"
+                      className="capitalize cursor-default"
                       color={user.disabled === false ? 'success' : 'danger'}
                       size="sm"
                       variant="flat"
@@ -176,36 +184,46 @@ export const Users = () => {
                   </TableCell>
                   <TableCell>
                     <div className="relative flex items-center gap-2">
-                      <Tooltip content="Details">
-                        <span className="text-default-400 cursor-pointer active:opacity-50">
-                          <Eye size={21} />
-                        </span>
-                      </Tooltip>
-                      <Tooltip content="Edit user">
-                        <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                          <Pencil size={21} />
-                        </span>
-                      </Tooltip>
-                      <Tooltip
-                        color={user.disabled === true ? 'success' : 'danger'}
-                        content={user.disabled === true ? 'Enable User' : 'Disable User'}
-                      >
-                        <span className="text-lg cursor-pointer active:opacity-50">
-                          {user.disabled === true ? (
-                            <UserRoundCheck
-                              size={21}
-                              onClick={() => handleStatusChange(user.uid)}
-                              className="text-success"
-                            />
-                          ) : (
-                            <UserRoundX
-                              size={21}
-                              onClick={() => handleStatusChange(user.uid)}
-                              className="text-danger"
-                            />
-                          )}
-                        </span>
-                      </Tooltip>
+                      <Credenza open={open} onOpenChange={setOpen}>
+                        <CredenzaTrigger asChild>
+                          <div>
+                            <Tooltip content="Edit user">
+                              <Pencil size={21} className="text-default-400" />
+                            </Tooltip>
+                          </div>
+                        </CredenzaTrigger>
+                        <CredenzaContent>
+                          <CredenzaHeader>
+                            <CredenzaTitle className="mb-3">Edit user</CredenzaTitle>
+                          </CredenzaHeader>
+                          <CredenzaBody></CredenzaBody>
+                          <CredenzaFooter>
+                            <Button color="primary">Save</Button>
+                          </CredenzaFooter>
+                        </CredenzaContent>
+                      </Credenza>
+                      {user.uid !== userData.uid && (
+                        <Tooltip
+                          color={user.disabled === true ? 'success' : 'danger'}
+                          content={user.disabled === true ? 'Enable User' : 'Disable User'}
+                        >
+                          <span className="text-lg cursor-pointer active:opacity-50">
+                            {user.disabled === true ? (
+                              <UserRoundCheck
+                                size={21}
+                                onClick={() => handleStatusChange(user.uid)}
+                                className="text-success"
+                              />
+                            ) : (
+                              <UserRoundX
+                                size={21}
+                                onClick={() => handleStatusChange(user.uid)}
+                                className="text-danger"
+                              />
+                            )}
+                          </span>
+                        </Tooltip>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
