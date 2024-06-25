@@ -184,7 +184,7 @@ export const Users = () => {
                   </TableCell>
                   <TableCell>
                     <div className="relative flex items-center gap-2">
-                      <Credenza open={open} onOpenChange={setOpen}>
+                      <Credenza>
                         <CredenzaTrigger asChild>
                           <div>
                             <Tooltip content="Edit user">
