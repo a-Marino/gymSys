@@ -15,7 +15,7 @@ export const AuthContextProvider = ({ children }) => {
   const color1 = randomColor();
   const color2 = randomColor();
 
-  async function createUser(email, password, name, rol) {
+  async function createUser(email, password, name, rol, dni, phone, address) {
     try {
       const res = await axios.post(`${import.meta.env.VITE_GYM_API_URL}/api/user`, {
         email: email,
@@ -23,12 +23,32 @@ export const AuthContextProvider = ({ children }) => {
         name: name,
         rol: rol,
         avatarColors: [color1, color2],
+        dni: dni,
+        phone: phone,
+        address: address,
       });
       return res.data;
     } catch (err) {
       throw err;
     }
   }
+
+  const editUser = async (uid, email, name, rol, dni, phone, address) => {
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user`, {
+        uid: uid,
+        email: email,
+        name: name,
+        rol: rol,
+        dni: dni,
+        phone: phone,
+        address: address,
+      });
+      return res.data;
+    } catch (err) {
+      throw err;
+    }
+  };
 
   const changeUserStatus = async (userID) => {
     try {
@@ -140,6 +160,7 @@ export const AuthContextProvider = ({ children }) => {
         changeEmail,
         setUser,
         changeUserStatus,
+        editUser,
       }}
     >
       {children}

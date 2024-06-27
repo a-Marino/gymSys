@@ -1,34 +1,26 @@
 import { useState } from 'react';
 import { Input } from '@nextui-org/react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../common/Select';
-import { EyeFilledIcon } from '../../../assets/Icons/EyeFilledIcon';
-import { EyeSlashFilledIcon } from '../../../assets/Icons/EyeSlashFilledIcon';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './Select';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
 
-export const Register = function ({ handleSubmit }) {
-  const [email, setEmail] = useState('');
-  const [rol, setRol] = useState('');
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [dni, setDni] = useState('');
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
-  const [isVisible, setIsVisible] = useState(false);
+export const Edit = function ({ handleSubmitEdit, user }) {
+  const [email, setEmail] = useState(user.email);
+  const [rol, setRol] = useState(user.rol);
+  const [name, setName] = useState(user.name);
+  const [dni, setDni] = useState(user?.dni);
+  const [phone, setPhone] = useState(user?.phone);
+  const [address, setAddress] = useState(user?.address);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    handleSubmit(email, password, name, rol, dni, phone, address);
-  };
-
-  const toggleVisibility = () => {
-    setIsVisible(!isVisible);
+    handleSubmitEdit(user.uid, email, name, rol, dni, phone, address);
   };
 
   return (
     <form
-      id="registerForm"
-      name="registerForm"
+      id="editForm"
+      name="editForm"
       onSubmit={onSubmit}
       className="flex flex-col items-center justify-center w-full gap-5"
     >
@@ -37,6 +29,7 @@ export const Register = function ({ handleSubmit }) {
           <Input
             type="text"
             onChange={(e) => setName(e.target.value)}
+            defaultValue={user.name}
             label="Name"
             labelPlacement="inside"
             variant="bordered"
@@ -45,31 +38,18 @@ export const Register = function ({ handleSubmit }) {
           <Input
             type="email"
             onChange={(e) => setEmail(e.target.value)}
+            defaultValue={user.email}
             label="Email"
             labelPlacement="inside"
             variant="bordered"
             required
-          />
-          <Input
-            label="Password"
-            onChange={(e) => setPassword(e.target.value)}
-            endContent={
-              <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                {isVisible ? (
-                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                ) : (
-                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                )}
-              </button>
-            }
-            type={isVisible ? 'text' : 'password'}
-            variant="bordered"
           />
         </div>
         <div className="flex flex-col w-full gap-5">
           <Input
             type="number"
             onChange={(e) => setDni(e.target.value)}
+            defaultValue={user?.dni}
             label="DNI"
             labelPlacement="inside"
             variant="bordered"
@@ -78,25 +58,29 @@ export const Register = function ({ handleSubmit }) {
           <Input
             type="text"
             onChange={(e) => setAddress(e.target.value)}
+            defaultValue={user?.address}
             label="Address"
             labelPlacement="inside"
             variant="bordered"
             required
           />
-          <PhoneInput
-            onChange={(value) => setPhone(value)}
-            placeholder="Enter phone number"
-            defaultCountry="AR"
-            className="[&_input]:bg-transparent [&_input]:p-3 [&_input]:border-2 [&_input]:border-default [&_input]:rounded-xl [&_select]:bg-content1 [&_select]:p-2 [&_select]:scrollbar-hide [&_select]:text-default-600 "
-          />
         </div>
       </div>
+      <PhoneInput
+        onChange={(value) => setPhone(value)}
+        value={user?.phone}
+        placeholder="Enter phone number"
+        defaultCountry="AR"
+        className="w-full [&_input]:bg-transparent [&_input]:p-3 [&_input]:border-2 [&_input]:border-default [&_input]:rounded-xl [&_select]:bg-content1 [&_select]:p-2 [&_select]:scrollbar-hide [&_select]:text-default-600 "
+        required
+      />
       <Select
         id="rol"
         name="rol"
         onValueChange={(rol) => {
           setRol(rol);
         }}
+        defaultValue={user.rol}
         required
       >
         <SelectTrigger>

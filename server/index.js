@@ -23,6 +23,10 @@ const auth = getAuth();
 
 const jsonParser = bodyParser.json();
 
+app.listen(process.env.PORT, () => {
+  console.log(`Server started at PORT ${process.env.PORT}`);
+});
+
 app.use(
   cors({
     origin: [
@@ -75,6 +79,9 @@ app.get('/api/users', jsonParser, async (req, res) => {
           uid: userInfo.uid,
           name: userInfo.name,
           email: userInfo.email,
+          phone: userInfo.phone,
+          address: userInfo.address,
+          dni: userInfo.dni,
           disabled: userInfo.disabled,
           ...additionalInfo,
         });
@@ -100,15 +107,59 @@ app.post('/api/user', jsonParser, async (req, res) => {
       password: user.password,
       displayName: user.displayName,
     });
-
     await db.collection('users').doc(userRecord.uid).set({
       email: user.email,
       name: user.name,
       rol: user.rol,
       plan: null,
       avatarColors: user.avatarColors,
+      dni: user.dni,
+      phone: user.phone,
+      address: user.address,
     });
     res.status(200).json({ message: 'User created successfully' });
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
+app.put('/api/user', jsonParser, async (req, res) => {
+  const user = req.body;
+  try {
+    let docRef = db.collection('users').doc(user.uid);
+    let doc = await docRef.get();
+    let dataUser = doc.data();
+    if (dataUser.name !== user.name) {
+      await db.collection('users').doc(user.uid).update({
+        name: user.name,
+      });
+    }
+    if (dataUser.email !== user.email) {
+      await db.collection('users').doc(user.uid).update({
+        email: user.email,
+      });
+    }
+    if (dataUser.rol !== user.rol) {
+      await db.collection('users').doc(user.uid).update({
+        rol: user.rol,
+      });
+    }
+    if (dataUser?.phone !== user?.phone) {
+      await db.collection('users').doc(user.uid).update({
+        phone: user.phone,
+      });
+    }
+    if (dataUser?.address !== user?.address) {
+      await db.collection('users').doc(user.uid).update({
+        address: user.address,
+      });
+    }
+    if (dataUser?.dni !== user?.dni) {
+      await db.collection('users').doc(user.uid).update({
+        dni: user.dni,
+      });
+    }
+    res.status(200).json({ message: 'User updated successfully' });
   } catch (err) {
     res.send(err.message);
   }
@@ -182,8 +233,4 @@ app.put('/api/user/changeName', jsonParser, async (req, res) => {
   } catch (err) {
     res.send(err.message);
   }
-});
-
-app.listen(5000, () => {
-  console.log('Server started at PORT 5000');
 });
