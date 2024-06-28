@@ -16,9 +16,7 @@ import {
 import {
   Credenza,
   CredenzaBody,
-  CredenzaClose,
   CredenzaContent,
-  CredenzaDescription,
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
@@ -31,14 +29,18 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Register } from '../Auth/Register';
+import { Edit } from '../../common/Edit';
 
 export const Users = () => {
-  const [open, setOpen] = useState(false);
-  const { userData, changeUserStatus, createUser } = UserAuth();
+  const [openRegister, setOpenRegister] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editingUserId, setEditingUserId] = useState(null);
+
+  const { userData, changeUserStatus, createUser, editUser } = UserAuth();
 
   const fetcher = (url) => axios.get(url).then((res) => res.data);
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, isLoading, mutate } = useSWR(
     `${import.meta.env.VITE_GYM_API_URL}/api/users`,
     fetcher
   );
@@ -51,9 +53,14 @@ export const Users = () => {
     { name: 'ACTIONS', uid: 'actions' },
   ];
 
-  const handleSubmit = async (email, password, name, rol) => {
+  const handleEditClick = (userId) => {
+    setOpenEdit(true);
+    setEditingUserId(userId);
+  };
+
+  const handleSubmit = async (email, password, name, rol, dni, phone, address) => {
     try {
-      const res = await createUser(email, password, name, rol);
+      const res = await createUser(email, password, name, rol, dni, phone, address);
       if (res && res.message) {
         toast.success(res.message, {
           position: 'bottom-right',
@@ -62,7 +69,32 @@ export const Users = () => {
           className: 'bg-success text-white',
           hideProgressBar: true,
         });
-        setOpen(false);
+        setOpenRegister(false);
+        mutate();
+      }
+      toast.error(res, {
+        position: 'bottom-right',
+        autoClose: 2000,
+        icon: false,
+        theme: 'colored',
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSubmitEdit = async (uid, email, name, rol, dni, phone, address) => {
+    try {
+      const res = await editUser(uid, email, name, rol, dni, phone, address);
+      if (res && res.message) {
+        toast.success(res.message, {
+          position: 'bottom-right',
+          autoClose: 2000,
+          icon: false,
+          className: 'bg-success text-white',
+          hideProgressBar: true,
+        });
+        setOpenEdit(false);
         mutate();
       }
       toast.error(res, {
@@ -111,13 +143,13 @@ export const Users = () => {
       {!isLoading ? (
         <div>
           <div className="mb-7">
-            <Credenza open={open} onOpenChange={setOpen}>
+            <Credenza open={openRegister} onOpenChange={setOpenRegister}>
               <CredenzaTrigger asChild>
                 <Button color="primary" endContent={<Plus />}>
                   Add New
                 </Button>
               </CredenzaTrigger>
-              <CredenzaContent>
+              <CredenzaContent className="md:min-w-[950px]">
                 <CredenzaHeader>
                   <CredenzaTitle className="mb-3">Add New User</CredenzaTitle>
                 </CredenzaHeader>
@@ -184,46 +216,60 @@ export const Users = () => {
                   </TableCell>
                   <TableCell>
                     <div className="relative flex items-center gap-2">
-                      <Credenza>
+                      <Credenza open={openEdit} onOpenChange={setOpenEdit}>
                         <CredenzaTrigger asChild>
-                          <div>
+                          <div onClick={() => handleEditClick(user.uid)}>
                             <Tooltip content="Edit user">
                               <Pencil size={21} className="text-default-400" />
                             </Tooltip>
                           </div>
                         </CredenzaTrigger>
-                        <CredenzaContent>
-                          <CredenzaHeader>
-                            <CredenzaTitle className="mb-3">Edit user</CredenzaTitle>
-                          </CredenzaHeader>
-                          <CredenzaBody></CredenzaBody>
-                          <CredenzaFooter>
-                            <Button color="primary">Save</Button>
-                          </CredenzaFooter>
-                        </CredenzaContent>
+                        {editingUserId === user.uid && (
+                          <CredenzaContent>
+                            <CredenzaHeader>
+                              <CredenzaTitle className="mb-3">Edit user</CredenzaTitle>
+                            </CredenzaHeader>
+                            <CredenzaBody>
+                              <div className="flex flex-col gap-5">
+                                <Edit user={user} handleSubmitEdit={handleSubmitEdit} />
+                                {user.uid !== userData.uid && (
+                                  <div className="flex gap-5 items-center">
+                                    <span className="text-lg cursor-pointer active:opacity-50">
+                                      {user.disabled === true ? (
+                                        <Button
+                                          isIconOnly
+                                          onClick={() => handleStatusChange(user.uid)}
+                                          className="bg-success"
+                                        >
+                                          <UserRoundCheck size={21} className="text-black" />
+                                        </Button>
+                                      ) : (
+                                        <Button
+                                          onClick={() => handleStatusChange(user.uid)}
+                                          isIconOnly
+                                          className="bg-danger"
+                                        >
+                                          <UserRoundX size={21} className="text-black" />
+                                        </Button>
+                                      )}
+                                    </span>
+                                    <span className="text-default-600">
+                                      {user.disabled === true
+                                        ? 'Activate user'
+                                        : 'Desactivate User'}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            </CredenzaBody>
+                            <CredenzaFooter>
+                              <Button color="primary" type="submit" form="editForm">
+                                Save
+                              </Button>
+                            </CredenzaFooter>
+                          </CredenzaContent>
+                        )}
                       </Credenza>
-                      {user.uid !== userData.uid && (
-                        <Tooltip
-                          color={user.disabled === true ? 'success' : 'danger'}
-                          content={user.disabled === true ? 'Enable User' : 'Disable User'}
-                        >
-                          <span className="text-lg cursor-pointer active:opacity-50">
-                            {user.disabled === true ? (
-                              <UserRoundCheck
-                                size={21}
-                                onClick={() => handleStatusChange(user.uid)}
-                                className="text-success"
-                              />
-                            ) : (
-                              <UserRoundX
-                                size={21}
-                                onClick={() => handleStatusChange(user.uid)}
-                                className="text-danger"
-                              />
-                            )}
-                          </span>
-                        </Tooltip>
-                      )}
                     </div>
                   </TableCell>
                 </TableRow>

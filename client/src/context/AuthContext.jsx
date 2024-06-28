@@ -15,7 +15,7 @@ export const AuthContextProvider = ({ children }) => {
   const color1 = randomColor();
   const color2 = randomColor();
 
-  async function createUser(email, password, name, rol) {
+  async function createUser(email, password, name, rol, dni, phone, address) {
     try {
       const res = await axios.post(`${import.meta.env.VITE_GYM_API_URL}/api/user`, {
         email: email,
@@ -23,12 +23,40 @@ export const AuthContextProvider = ({ children }) => {
         name: name,
         rol: rol,
         avatarColors: [color1, color2],
+        dni: dni,
+        phone: phone,
+        address: address,
       });
       return res.data;
     } catch (err) {
       throw err;
     }
   }
+
+  const login = (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password);
+  };
+
+  const logout = () => {
+    return signOut(auth);
+  };
+
+  const editUser = async (uid, email, name, rol, dni, phone, address) => {
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user`, {
+        uid: uid,
+        email: email,
+        name: name,
+        rol: rol,
+        dni: dni,
+        phone: phone,
+        address: address,
+      });
+      return res.data;
+    } catch (err) {
+      throw err;
+    }
+  };
 
   const changeUserStatus = async (userID) => {
     try {
@@ -53,36 +81,70 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
-  const updateName = async (userID, name) => {
+  const changeUserData = async (userId, { name, email, address, phone, dni }) => {
     try {
-      const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user/changeName`, {
-        uid: userID,
-        name: name,
-      });
-      return res.data;
+      if ({ name } && name !== userData.name) {
+        try {
+          const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user/changeName`, {
+            uid: userId,
+            name: name,
+          });
+          return res.data;
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      if ({ email } && email !== userData.email) {
+        try {
+          const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user/changeEmail`, {
+            uid: userId,
+            email: email,
+          });
+          logout();
+          return res.data;
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      if ({ address } && address !== userData.address) {
+        try {
+          const res = await axios.put(
+            `${import.meta.env.VITE_GYM_API_URL}/api/user/changeAddress`,
+            {
+              uid: userId,
+              address: address,
+            }
+          );
+          return res.data;
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      if ({ phone } && phone !== userData.phone) {
+        try {
+          const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user/changePhone`, {
+            uid: userId,
+            phone: phone,
+          });
+          return res.data;
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      if ({ dni } && dni !== userData.dni) {
+        try {
+          const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user/changeDni`, {
+            uid: userId,
+            dni: dni,
+          });
+          return res.data;
+        } catch (err) {
+          console.log(err);
+        }
+      }
     } catch (err) {
       console.log(err);
     }
-  };
-
-  const changeEmail = async (userId, email) => {
-    try {
-      const res = await axios.put(`${import.meta.env.VITE_GYM_API_URL}/api/user/changeEmail`, {
-        uid: userId,
-        email: email,
-      });
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const login = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
-  };
-
-  const logout = () => {
-    return signOut(auth);
   };
 
   async function getUserData(uid) {
@@ -130,16 +192,16 @@ export const AuthContextProvider = ({ children }) => {
     <UserContext.Provider
       value={{
         createUser,
-        user,
-        logout,
         login,
+        logout,
+        changePlan,
+        changeUserStatus,
+        editUser,
+        changeUserData,
+        user,
         isLoading,
         userData,
-        changePlan,
-        updateName,
-        changeEmail,
         setUser,
-        changeUserStatus,
       }}
     >
       {children}
