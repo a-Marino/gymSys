@@ -12,35 +12,51 @@ import {
   Input,
 } from '@nextui-org/react';
 import {
-  Credenza,
-  CredenzaBody,
-  CredenzaClose,
-  CredenzaContent,
-  CredenzaDescription,
-  CredenzaFooter,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaTrigger,
-} from '../../common/Credenza';
-import { Pencil, CircleAlert } from 'lucide-react';
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetFooter,
+} from '../../common/Sheet';
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const Account = function () {
-  const { isLoading, updateName, changeEmail, logout, setUser, user } = UserAuth();
+  const {
+    isLoading,
+
+    setUser,
+    changeUserData,
+    user,
+  } = UserAuth();
   const [name, setName] = useState();
   const [email, setEmail] = useState();
+  const [address, setAddress] = useState();
+  const [dni, setDni] = useState();
+  const [phone, setPhone] = useState();
+  const [open, setOpen] = useState();
 
-  const handleChangeName = async () => {
+  const handleEditProfile = async () => {
     try {
-      if (!name) return;
-      const res = await updateName(user.uid, name);
+      changeUserData(user.uid, { name, email, address, dni, phone });
       setUser((prevUser) => {
-        const updatedUser = { ...prevUser, name: name };
+        const updatedUser = {
+          ...prevUser,
+          name: name,
+          email: email,
+          address: address,
+          phone: phone,
+          dni: dni,
+        };
         localStorage.setItem('userData', JSON.stringify(updatedUser));
         return updatedUser;
       });
-      toast(res.message, {
+      setOpen(false);
+      toast.success('User updated successfully', {
         position: 'bottom-right',
         autoClose: 2000,
         icon: false,
@@ -52,18 +68,12 @@ export const Account = function () {
     }
   };
 
-  const handleChangeEmail = async () => {
-    if (!email) return;
-    if (email === user.email) return;
-    await changeEmail(user.uid, email).then(() => {
-      sessionStorage.setItem('emailChanged', 'true');
-      logout();
-    });
-  };
-
   useEffect(() => {
     setName(user?.name || '');
     setEmail(user?.email || '');
+    setAddress(user?.address || '');
+    setPhone(user?.phone || '');
+    setDni(user?.dni || '');
   }, [user]);
 
   return !isLoading ? (
@@ -85,81 +95,95 @@ export const Account = function () {
         <div className="flex flex-col">
           <div className="flex items-center gap-4">
             <p className="text-2xl font-bold">{user.name}</p>
-            <Credenza>
-              <CredenzaTrigger asChild>
-                <Pencil
-                  size={25}
-                  className="border-2 rounded-md p-1 hover:border-primary hover:text-primary transition-colors duration-150"
-                />
-              </CredenzaTrigger>
-              <CredenzaContent>
-                <CredenzaHeader>
-                  <CredenzaTitle>Change name</CredenzaTitle>
-                  <CredenzaDescription>You can change your name here</CredenzaDescription>
-                </CredenzaHeader>
-                <CredenzaBody>
-                  <Input
-                    type="text"
-                    label="Name"
-                    labelPlacement="inside"
-                    variant="bordered"
-                    defaultValue={user.name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </CredenzaBody>
-                <CredenzaFooter>
-                  <CredenzaClose asChild>
-                    <Button color="primary" onClick={handleChangeName}>
-                      Save
-                    </Button>
-                  </CredenzaClose>
-                </CredenzaFooter>
-              </CredenzaContent>
-            </Credenza>
-          </div>
-          <div className="flex items-center gap-4">
-            <p className="text-lg text-white/70">{user.email}</p>
-            <Credenza>
-              <CredenzaTrigger asChild>
-                <Pencil
-                  size={25}
-                  className="border-2 rounded-md p-1 hover:border-primary hover:text-primary transition-colors duration-150"
-                />
-              </CredenzaTrigger>
-              <CredenzaContent>
-                <CredenzaHeader>
-                  <CredenzaTitle className="mb-2">Change email</CredenzaTitle>
-                  <CredenzaDescription className="flex gap-3 items-center bg-danger/10 p-2 rounded-lg text-danger">
-                    <CircleAlert size={40} />
-                    <span>
-                      <span className="font-bold">IMPORTANT:</span> If you change your email
-                      you&apos;ll be loged out, and you&apos;ll have to sing in again.
-                    </span>
-                  </CredenzaDescription>
-                </CredenzaHeader>
-                <CredenzaBody>
-                  <Input
-                    type="email"
-                    label="Email"
-                    labelPlacement="inside"
-                    variant="bordered"
-                    defaultValue={user.email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </CredenzaBody>
-                <CredenzaFooter>
-                  <CredenzaClose asChild>
-                    <Button color="primary" onClick={handleChangeEmail}>
-                      Save
-                    </Button>
-                  </CredenzaClose>
-                </CredenzaFooter>
-              </CredenzaContent>
-            </Credenza>
           </div>
         </div>
       </div>
-      <Divider className="my-10 dark" />
+      <Divider className="my-10" />
+      <div className="flex w-full">
+        <div>
+          <h4 className="text-3xl font-semibold">Personal info</h4>
+          <div className="flex flex-col gap-2 mt-5 [&_p]:font-semibold [&_p]:text-lg [&_span]:text-base [&_span]:font-normal [&_span]:text-default-400">
+            <p>
+              Email: <span>{user.email}</span>
+            </p>
+            <p>
+              Address: <span>{user.address}</span>
+            </p>
+            <p>
+              DNI: <span>{user.dni}</span>
+            </p>
+            <p>
+              Phone number: <span>{user.phone}</span>
+            </p>
+          </div>
+        </div>
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button className="ml-auto" variant="bordered" color="primary" size="sm">
+              Edit profile
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Edit profile</SheetTitle>
+              <SheetDescription>
+                Make changes to your profile here. Click save when you're done.
+              </SheetDescription>
+            </SheetHeader>
+            <div className="flex flex-col gap-4 my-5">
+              <Input
+                onChange={(e) => setName(e.target.value)}
+                label="Name"
+                labelPlacement="inside"
+                variant="bordered"
+                defaultValue={user?.name}
+                required
+              />
+              <Input
+                onChange={(e) => setEmail(e.target.value)}
+                description="IMPORTANT: If you change your email you'll be loged out, and you'll have to sing in again."
+                type="email"
+                label="Email"
+                labelPlacement="inside"
+                variant="bordered"
+                defaultValue={user?.email}
+                required
+              />
+              <Input
+                onChange={(e) => setAddress(e.target.value)}
+                label="Address"
+                labelPlacement="inside"
+                variant="bordered"
+                defaultValue={user?.address}
+                required
+              />
+              <Input
+                onChange={(e) => setDni(e.target.value)}
+                type="number"
+                label="DNI"
+                labelPlacement="inside"
+                variant="bordered"
+                defaultValue={user?.dni}
+                required
+              />
+              <PhoneInput
+                onChange={(value) => setPhone(value)}
+                value={user?.phone}
+                placeholder="Enter phone number"
+                defaultCountry="AR"
+                className="w-full [&_input]:bg-transparent [&_input]:p-3 [&_input]:border-2 [&_input]:border-default [&_input]:rounded-xl [&_select]:bg-content1 [&_select]:p-2 [&_select]:scrollbar-hide [&_select]:text-default-600 "
+                required
+              />
+            </div>
+            <SheetFooter>
+              <Button color="primary" onClick={handleEditProfile}>
+                Save
+              </Button>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+      </div>
+      <Divider className="my-10" />
       {user.plan && (
         <div className="flex flex-col">
           <h4 className="text-3xl font-semibold">Plan</h4>

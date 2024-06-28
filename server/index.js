@@ -234,3 +234,36 @@ app.put('/api/user/changeName', jsonParser, async (req, res) => {
     res.send(err.message);
   }
 });
+
+app.put('/api/user/changePhone', jsonParser, async (req, res) => {
+  const user = req.body;
+  try {
+    await db.collection('users').doc(user.uid).update({
+      phone: user.phone,
+    });
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
+app.put('/api/user/changeDni', jsonParser, async (req, res) => {
+  const user = req.body;
+  try {
+    await db.collection('users').doc(user.uid).update({
+      dni: user.dni,
+    });
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
+app.put('/api/user/changeAddress', jsonParser, async (req, res) => {
+  const user = req.body;
+  try {
+    await db.collection('users').doc(user.uid).update({
+      address: user.address,
+    });
+  } catch (err) {
+    res.send(err.message);
+  }
+});

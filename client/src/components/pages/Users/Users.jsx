@@ -16,9 +16,7 @@ import {
 import {
   Credenza,
   CredenzaBody,
-  CredenzaClose,
   CredenzaContent,
-  CredenzaDescription,
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
@@ -56,8 +54,8 @@ export const Users = () => {
   ];
 
   const handleEditClick = (userId) => {
-    setOpenEdit(true); // Abre el modal
-    setEditingUserId(userId); // Guarda el UID del usuario que se está editando
+    setOpenEdit(true);
+    setEditingUserId(userId);
   };
 
   const handleSubmit = async (email, password, name, rol, dni, phone, address) => {
@@ -235,28 +233,32 @@ export const Users = () => {
                               <div className="flex flex-col gap-5">
                                 <Edit user={user} handleSubmitEdit={handleSubmitEdit} />
                                 {user.uid !== userData.uid && (
-                                  <Tooltip
-                                    color={user.disabled === true ? 'success' : 'danger'}
-                                    content={
-                                      user.disabled === true ? 'Enable User' : 'Disable User'
-                                    }
-                                  >
+                                  <div className="flex gap-5 items-center">
                                     <span className="text-lg cursor-pointer active:opacity-50">
                                       {user.disabled === true ? (
-                                        <UserRoundCheck
-                                          size={21}
+                                        <Button
+                                          isIconOnly
                                           onClick={() => handleStatusChange(user.uid)}
-                                          className="text-success"
-                                        />
+                                          className="bg-success"
+                                        >
+                                          <UserRoundCheck size={21} className="text-black" />
+                                        </Button>
                                       ) : (
-                                        <UserRoundX
-                                          size={21}
+                                        <Button
                                           onClick={() => handleStatusChange(user.uid)}
-                                          className="text-danger"
-                                        />
+                                          isIconOnly
+                                          className="bg-danger"
+                                        >
+                                          <UserRoundX size={21} className="text-black" />
+                                        </Button>
                                       )}
                                     </span>
-                                  </Tooltip>
+                                    <span className="text-default-600">
+                                      {user.disabled === true
+                                        ? 'Activate user'
+                                        : 'Desactivate User'}
+                                    </span>
+                                  </div>
                                 )}
                               </div>
                             </CredenzaBody>
