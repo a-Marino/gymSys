@@ -12,9 +12,9 @@ export const Classes = () => {
 
   return (
     <div className="min-h-[92vh] p-7 flex flex-col">
-      <h1 className="text-5xl font-semibold">Classes</h1>
+      <h1 className="text-5xl font-semibold text-center">Classes</h1>
       {!isLoading ? (
-        <div className="mt-5 flex flex-wrap gap-10">
+        <div className="mt-10 flex flex-wrap gap-10">
           {classes.map((item, index) => (
             <div key={index}>
               <ClassesCard
