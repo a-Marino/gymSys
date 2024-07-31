@@ -3,6 +3,7 @@ import { Input } from '@nextui-org/react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './Select';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
+import { UserAuth } from '../../context/AuthContext';
 
 export const Edit = function ({ handleSubmitEdit, user }) {
   const [email, setEmail] = useState(user.email);
@@ -11,6 +12,8 @@ export const Edit = function ({ handleSubmitEdit, user }) {
   const [dni, setDni] = useState(user?.dni);
   const [phone, setPhone] = useState(user?.phone);
   const [address, setAddress] = useState(user?.address);
+
+  const { userData } = UserAuth();
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -74,27 +77,35 @@ export const Edit = function ({ handleSubmitEdit, user }) {
         className="w-full [&_input]:bg-transparent [&_input]:p-3 [&_input]:border-2 [&_input]:border-default [&_input]:rounded-xl [&_select]:bg-content1 [&_select]:p-2 [&_select]:scrollbar-hide [&_select]:text-default-600 "
         required
       />
-      <Select
-        id="rol"
-        name="rol"
-        onValueChange={(rol) => {
-          setRol(rol);
-        }}
-        defaultValue={user.rol}
-        required
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Select a role" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="admin" key="admin">
-            Admin
-          </SelectItem>
-          <SelectItem value="user" key="user">
-            User
-          </SelectItem>
-        </SelectContent>
-      </Select>
+      {userData && userData.rol === 'admin' && (
+        <Select
+          id="rol"
+          name="rol"
+          onValueChange={(rol) => {
+            setRol(rol);
+          }}
+          defaultValue={user?.rol}
+          required
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select a role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="admin" key="admin">
+              Admin
+            </SelectItem>
+            <SelectItem value="member" key="member">
+              Member
+            </SelectItem>
+            <SelectItem value="professor" key="professor">
+              Professor
+            </SelectItem>
+            <SelectItem value="staff" key="staff">
+              Staff
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      )}
     </form>
   );
 };

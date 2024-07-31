@@ -26,13 +26,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const Account = function () {
-  const {
-    isLoading,
-
-    setUser,
-    changeUserData,
-    user,
-  } = UserAuth();
+  const { isLoading, setUser, changeUserData, user } = UserAuth();
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [address, setAddress] = useState();

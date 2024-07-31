@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { UserAuth } from '../../../context/AuthContext';
 import { Input } from '@nextui-org/react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../common/Select';
 import { EyeFilledIcon } from '../../../assets/Icons/EyeFilledIcon';
@@ -8,13 +9,15 @@ import PhoneInput from 'react-phone-number-input';
 
 export const Register = function ({ handleSubmit }) {
   const [email, setEmail] = useState('');
-  const [rol, setRol] = useState('');
+  const [rol, setRol] = useState('member');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [dni, setDni] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+
+  const { userData } = UserAuth();
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -91,26 +94,34 @@ export const Register = function ({ handleSubmit }) {
           />
         </div>
       </div>
-      <Select
-        id="rol"
-        name="rol"
-        onValueChange={(rol) => {
-          setRol(rol);
-        }}
-        required
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Select a role" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="admin" key="admin">
-            Admin
-          </SelectItem>
-          <SelectItem value="user" key="user">
-            User
-          </SelectItem>
-        </SelectContent>
-      </Select>
+      {userData && userData.rol === 'admin' && (
+        <Select
+          id="rol"
+          name="rol"
+          onValueChange={(rol) => {
+            setRol(rol);
+          }}
+          required
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select a role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="admin" key="admin">
+              Admin
+            </SelectItem>
+            <SelectItem value="member" key="member">
+              Member
+            </SelectItem>
+            <SelectItem value="professor" key="professor">
+              Professor
+            </SelectItem>
+            <SelectItem value="staff" key="staff">
+              Staff
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      )}
     </form>
   );
 };

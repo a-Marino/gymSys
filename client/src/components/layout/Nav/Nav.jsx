@@ -58,6 +58,11 @@ export const Nav = () => {
           </Link>
         </NavbarItem>
         <NavbarItem>
+          <Link className="text-white" href="/classes">
+            Classes
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
           <Link className="text-white" href="#">
             About Us
           </Link>
@@ -67,7 +72,7 @@ export const Nav = () => {
             Contact Us
           </Link>
         </NavbarItem>
-        {userData && userData.rol === 'admin' && (
+        {((userData && userData.rol === 'admin') || (userData && userData.rol === 'staff')) && (
           <NavbarItem>
             <Link className="text-blue-600" href="/users">
               User List
@@ -142,12 +147,15 @@ export const Nav = () => {
           <Link className="w-full text-white" href="#" size="lg">
             Contact Us
           </Link>
+          <Link className="w-full text-white" href="/classes" size="lg">
+            Classes
+          </Link>
           {userData && (
             <Link className="w-full text-white" href="#" size="lg">
               Classes
             </Link>
           )}
-          {userData && userData.rol === 'admin' && (
+          {((userData && userData.rol === 'admin') || (userData && userData.rol === 'staff')) && (
             <Link className="w-full text-blue-600" href="/users" size="lg">
               User List
             </Link>

@@ -137,7 +137,7 @@ export const Users = () => {
     mutate();
   }, [userData]);
 
-  return userData && userData.rol === 'admin' ? (
+  return (userData && userData.rol === 'admin') || (userData && userData.rol === 'staff') ? (
     <div className="min-h-[92vh] flex flex-col p-7 space-y-10">
       <h1 className="text-4xl font-semibold">List of Users</h1>
       {!isLoading ? (
