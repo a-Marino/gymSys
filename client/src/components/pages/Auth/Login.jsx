@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../../../context/AuthContext';
 import { useState, useEffect } from 'react';
-import { Input, Button } from '@nextui-org/react';
+import { Input, Button, Link } from '@nextui-org/react';
 import { EyeFilledIcon } from '../../../assets/Icons/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../../../assets/Icons/EyeSlashFilledIcon';
 import { toast, ToastContainer } from 'react-toastify';
@@ -87,6 +87,9 @@ export const Login = function () {
           Sign In
         </Button>
       </form>
+      <Link className=" text-muted-foreground cursor-pointer" href="/signup">
+        Dont have an account? Sign Up
+      </Link>
       <ToastContainer />
     </div>
   );

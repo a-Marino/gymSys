@@ -84,9 +84,20 @@ export const Nav = () => {
       <NavbarContent justify="end">
         <NavbarItem>
           {!userData ? (
-            <Button as={Link} color="primary" href="/login">
-              Login
-            </Button>
+            <div className="flex gap-2">
+              <Button as={Link} color="primary" href="/login">
+                Login
+              </Button>
+              <Button
+                as={Link}
+                color="primary"
+                href="/signup"
+                variant="bordered"
+                className="hidden md:flex"
+              >
+                Register
+              </Button>
+            </div>
           ) : (
             <div>
               <div className="hidden md:flex">

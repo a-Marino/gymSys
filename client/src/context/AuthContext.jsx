@@ -1,7 +1,12 @@
 import { createContext, useContext } from 'react';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import randomColor from 'randomcolor';
@@ -32,6 +37,25 @@ export const AuthContextProvider = ({ children }) => {
       throw err;
     }
   }
+
+  const signup = async (email, name, password, dni, phone, address) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      await setDoc(doc(db, 'users', user.uid), {
+        email: email,
+        name: name,
+        dni: dni,
+        phone: phone,
+        address: address,
+        rol: 'member',
+        avatarColors: [color1, color2],
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
@@ -202,6 +226,7 @@ export const AuthContextProvider = ({ children }) => {
         isLoading,
         userData,
         setUser,
+        signup,
       }}
     >
       {children}

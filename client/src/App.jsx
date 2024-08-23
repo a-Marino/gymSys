@@ -12,6 +12,7 @@ import { Layout } from './components/layout/Layout';
 import { Plans } from './components/pages/Plans/Plans';
 import { Classes } from './components/pages/Classes/Classes';
 import { Users } from './components/pages/Users/Users';
+import { SignUp } from './components/pages/Auth/SignUp';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
               <Route path="/account" element={<Account />} />
               <Route path="/users" element={<Users />} />
             </Route>
+            <Route path="/signup" element={<SignUp />} />
             <Route
               path="/login"
               element={
